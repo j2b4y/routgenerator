@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/fluent-hc-4.2.jar"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/httpclient-4.2.jar"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/httpclient-cache-4.2.jar"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/httpcore-4.2.jar"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/httpmime-4.2.jar"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/joda-time-2.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/joda-time-2.1-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/joda-time-2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Christopher/Documents/Programmierung/java/routgenerator/lib/sqljdbc4.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
