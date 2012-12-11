@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MSSQLConnection {
 	
@@ -64,5 +67,39 @@ public class MSSQLConnection {
     	}
 		return result;
     }
+	
+	public static void insertRout( String costs, String distance, String emissions, String traveltime){
+		
+		conn = getInstance();
+		
+		int userID = 1234;
+		int requestID = 4567;
+		int TripID = 98710;
+		int needID = 1;
+		
+		traveltime = "";
+	 
+		
+		if(conn!=null){
+			Statement query;
+			try{
+				query = conn.createStatement();
+                
+                String sql = "insert into [JinengoOperationalCRM_Copy].[dbo].[temprouts] ([UserID], [TripID], [RequestID],[cost], [distance], [emission], " +
+                		"[traveltime], [NeedID]) values ( '"+userID+"','"+requestID+"','"+TripID+"','"+Float.valueOf(costs)+"'," +
+                				"'"+Float.valueOf(distance)+"','"+Float.valueOf(emissions)+"','"+traveltime+"','"+needID+"')";
+               
+                query.executeUpdate(sql);
+			}
+			catch (SQLException e){
+				System.out.println("SQL-Fehler: " + e);
+                e.printStackTrace();
+			}
+			
+			
+			
+		}
+		
+	}
 	
 }

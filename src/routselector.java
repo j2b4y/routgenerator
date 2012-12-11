@@ -79,33 +79,7 @@ class routselector {
 		}
 	}
 	
-	public void choose(int userID, ArrayList<String[]> routs, ArrayList<String[]> subrouts){
-		
-		float summe = sustainable+comftable+cost;
-		float wahrsus = sustainable/summe;
-		float wahrcom = comftable/summe;
-		float wahrcos = cost/summe;
-		boolean bchoosen = false;
-		
-		String[] routendiscribtion = {"cost","distance","emission","traveltime","subrouts"};
-		String[] subroutendiscribtion = {"cost","distance","emission","traveltime","transportation","start","starttime","end","endtime"};
-		
-		while(bchoosen == false){
-			
-			//Routenbewertung
-			int routen = routs.size();
-			int counter = 0;
-			
-			String[] temp = routs.get(counter);
-			
-//			temp[2];
-			
-			
-		}
-		
-		
-		
-	}
+	
 	
 
 }

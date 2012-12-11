@@ -12,15 +12,14 @@ import org.xml.sax.helpers.DefaultHandler;
 public class xmlreader{
 	
 	
-	SAXParserFactory factory = SAXParserFactory.newInstance();
+	public SAXParserFactory factory = SAXParserFactory.newInstance();
 	
 	//SAXParser saxParser = factory.newSAXParser();
 	
 	
-		DefaultHandler handler = new DefaultHandler() {
+		public DefaultHandler handler = new DefaultHandler() {
 	 
 			boolean broute = false;
-
 			boolean btotalcosts = false;
 			boolean btotaldistance = false;
 			boolean btotalemissions = false;
@@ -46,7 +45,7 @@ public class xmlreader{
 	 
 			public void startElement(String uri, String localName,String qName, Attributes attributes) throws SAXException {
 		 
-				//System.out.println("Start Element :" + qName);
+				System.out.println("Start Element :" + qName);
 		 
 				if (qName.equalsIgnoreCase("ROUTE")) {
 					broute = true;
