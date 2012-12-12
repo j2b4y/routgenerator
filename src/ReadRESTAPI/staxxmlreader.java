@@ -225,9 +225,9 @@ public class staxxmlreader {
 		
 		if(stotalcosts!="" && stotaldistance != "" && stotalemissions != "" && stotaltraveltime != "")
 		{
+			DateTime traveltime = new DateTime((long) (Float.parseFloat(stotaltraveltime)));
 			
-			
-			
+			System.out.println("----> " + traveltime.toString("HH:mm:ss"));
 			
 			System.out.println("INSERT INTO ROUTS () VALUES {"+stotalcosts+","+stotaldistance+","+stotalemissions+","+stotaltraveltime+"}");
 			MSSQLConnection.insertRout(stotalcosts, stotaldistance, stotalemissions, stotaltraveltime);
@@ -250,7 +250,14 @@ public class staxxmlreader {
 		if(ssubcosts!="" && ssubdistance != "" && ssubemissions != "" && ssubtraveltime != "" && ssubtransport != "" && ssubstart != "" && ssubstarttime != "" && ssubend != "" && ssubendtime != "")
 		{
 			DateTime startdate = new DateTime(Long.parseLong(ssubstarttime));
-			DateTime enddate = new DateTime(Long.parseLong(ssubstarttime));
+			DateTime enddate = new DateTime(Long.parseLong(ssubendtime));
+			
+			DateTime date = enddate.minus(Long.parseLong(ssubstarttime));
+			
+			System.out.println("starttime: "+ssubstarttime);
+			System.out.println("endtime: "+ssubendtime);
+			System.out.println("traveltime: "+ssubtraveltime);
+			System.out.println("traveltime: "+date);
 			
 			System.out.println("INSERT INTO SUBROUTS () VALUES {"+ssubcosts+","+ssubdistance+","+ssubemissions+","+ssubtraveltime+","+ssubtransport+","+ssubstart+","+startdate.toString("yyyy-MM-dd HH:mm:ss")+","+ssubend+","+enddate.toString("yyyy-MM-dd HH:mm:ss")+"}");
 		}
