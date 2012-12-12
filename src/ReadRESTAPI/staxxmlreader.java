@@ -1,14 +1,15 @@
 package ReadRESTAPI;
 
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.sql.Time;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.XMLEvent;
+
+import org.joda.time.DateTime;
 
 import DBConnection.MSSQLConnection;
 
@@ -224,12 +225,16 @@ public class staxxmlreader {
 		
 		if(stotalcosts!="" && stotaldistance != "" && stotalemissions != "" && stotaltraveltime != "")
 		{
+			
+			
+			
+			
 			System.out.println("INSERT INTO ROUTS () VALUES {"+stotalcosts+","+stotaldistance+","+stotalemissions+","+stotaltraveltime+"}");
 			MSSQLConnection.insertRout(stotalcosts, stotaldistance, stotalemissions, stotaltraveltime);
 		}
 		else
 		{
-			System.out.println("INSERT INTO ROUTS () VALUES {"+stotalcosts+","+stotaldistance+","+stotalemissions+","+stotaltraveltime+"}");
+			System.out.println("{"+stotalcosts+","+stotaldistance+","+stotalemissions+","+stotaltraveltime+"}");
 			System.out.println("Fehler: nicht alle Felder gefuellt");
 		}
 			
@@ -244,7 +249,10 @@ public class staxxmlreader {
 		
 		if(ssubcosts!="" && ssubdistance != "" && ssubemissions != "" && ssubtraveltime != "" && ssubtransport != "" && ssubstart != "" && ssubstarttime != "" && ssubend != "" && ssubendtime != "")
 		{
-			System.out.println("INSERT INTO SUBROUTS () VALUES {"+ssubcosts+","+ssubdistance+","+ssubemissions+","+ssubtraveltime+","+ssubtransport+","+ssubstart+","+ssubstarttime+","+ssubend+","+ssubendtime+"}");
+			DateTime startdate = new DateTime(Long.parseLong(ssubstarttime));
+			DateTime enddate = new DateTime(Long.parseLong(ssubstarttime));
+			
+			System.out.println("INSERT INTO SUBROUTS () VALUES {"+ssubcosts+","+ssubdistance+","+ssubemissions+","+ssubtraveltime+","+ssubtransport+","+ssubstart+","+startdate.toString("yyyy-MM-dd HH:mm:ss")+","+ssubend+","+enddate.toString("yyyy-MM-dd HH:mm:ss")+"}");
 		}
 		else
 		{

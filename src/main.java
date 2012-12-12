@@ -26,13 +26,15 @@ public class main {
 		csvreader destinations = new csvreader();
 		List destinationresult = destinations.csvhandler("destinations.csv");
 		
+		int entrys = destinationresult.size();
+		
 		java.util.Random random = new java.util.Random();
 		
-		int start = random.nextInt(21);
-		int end = random.nextInt(21);
+		int start = random.nextInt(entrys);
+		int end = random.nextInt(entrys);
 		
 		while(start==end){
-			end = random.nextInt(23);
+			end = random.nextInt(entrys);
     	}
 		
 		System.out.println("Start: "+destinationresult.get(start).toString());

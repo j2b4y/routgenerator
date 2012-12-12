@@ -102,4 +102,26 @@ public class MSSQLConnection {
 		
 	}
 	
+	public static void insertSubRoute(){
+		
+		conn = getInstance();
+		
+		if(conn!=null){
+			Statement query;
+			
+			try{
+				query = conn.createStatement();
+				
+				String sql = "insert into [JinengoOperationalCRM_Copy].[dbo].[tempsubrouts]";
+				
+				query.executeUpdate(sql);
+			}
+			catch (SQLException e){
+				System.out.println("SQL-Fehler: " + e);
+                e.printStackTrace();
+			}
+			
+		}
+	}
+	
 }
