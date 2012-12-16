@@ -9,6 +9,7 @@ class routselector {
 	private float sustainable;
 	private float comftable;
 	private float cost;
+	private float time;
 	private boolean brailMembership;
 	private boolean bpublicTransportMember;
 	private boolean bownsSpecialVehicle;
@@ -18,7 +19,7 @@ class routselector {
 	
 	public void getUserPref(int userID){
 		
-		String query = "SELECT sustainabilityPreference, comfortPreference, costsPreference FROM [JinengoOperationalCRM_Copy].[dbo].[Preferences] WHERE userID ="+userID;
+		String query = "SELECT sustainabilityPreference, comfortPreference, costsPreference, timePreference FROM [JinengoOperationalCRM_Copy].[dbo].[Preferences] WHERE userID ="+userID;
 		
 		ResultSet res = MSSQLConnection.selectSomething(query);
 		try{
@@ -27,8 +28,9 @@ class routselector {
 				sustainable = res.getFloat("sustainabilityPreference");
 				comftable = res.getFloat("comfortPreference");
 				cost = res.getFloat("costsPreference");
+				time = res.getFloat("timePreference");
 				
-				System.out.println("Nachhaltigkeit: "+sustainable+" - Komfort: "+comftable+" - Kosten: "+cost);
+				System.out.println("Nachhaltigkeit: "+sustainable+" - Komfort: "+comftable+" - Kosten: "+cost+" -Time: "+time);
 	        }
 		}
 		catch(Exception e){
