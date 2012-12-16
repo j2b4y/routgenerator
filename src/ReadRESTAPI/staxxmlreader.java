@@ -48,12 +48,15 @@ public class staxxmlreader {
 	String ssubend ="";
 	String ssubendtime="";
 	int subroutscounter = 0;
+	int oneuserID;
 	int requestID;
 	int routeID;
 	int subrouteID;
 	
 
 	public void streamreader(InputStream stream, int userID) throws XMLStreamException, FactoryConfigurationError{
+		
+		oneuserID = userID;
 		
 		XMLStreamReader xmlStreamReader = XMLInputFactory.newInstance().createXMLStreamReader(stream);
 		
@@ -219,8 +222,6 @@ public class staxxmlreader {
 		    		break;
 		    		
 		    	case "subroute":
-		    		idgenerator subroute = new idgenerator();
-		    		subrouteID = subroute.genSubRoutID();
 		    		subrouthandler();
 		    		break;
 
@@ -242,8 +243,9 @@ public class staxxmlreader {
 //			System.out.println("TimeZone: "+traveltime.getZone());
 //			System.out.println("----> " + traveltime.toString("HH:mm:ss"));
 			
-			System.out.println("INSERT INTO ROUTS () VALUES {"+stotalcosts+","+stotaldistance+","+stotalemissions+","+stotaltraveltime+"}");
-//			MSSQLConnection.insertRout(stotalcosts, stotaldistance, stotalemissions, stotaltraveltime);
+			System.out.println("UserID: "+oneuserID+" RequestID: "+requestID+" RouteID: "+routeID);
+//			System.out.println("INSERT INTO ROUTS () VALUES {"+stotalcosts+","+stotaldistance+","+stotalemissions+","+stotaltraveltime+"}");
+		MSSQLConnection.insertRout(oneuserID, requestID, routeID, stotalcosts, stotaldistance, stotalemissions, stotaltraveltime);
 		}
 		else
 		{
@@ -260,19 +262,23 @@ public class staxxmlreader {
 	
 	private void subrouthandler(){
 		
+		idgenerator subroute = new idgenerator();
+		subrouteID = subroute.genSubRoutID();
+		
 		if(ssubcosts!="" && ssubdistance != "" && ssubemissions != "" && ssubtraveltime != "" && ssubtransport != "" && ssubstart != "" && ssubstarttime != "" && ssubend != "" && ssubendtime != "")
 		{
 			DateTime startdate = new DateTime(Long.parseLong(ssubstarttime));
 			DateTime enddate = new DateTime(Long.parseLong(ssubendtime));
 			
 //			DateTime date = enddate.minus(Long.parseLong(ssubstarttime));
-//			
 //			System.out.println("starttime: "+ssubstarttime);
 //			System.out.println("endtime: "+ssubendtime);
 //			System.out.println("traveltime: "+ssubtraveltime);
 //			System.out.println("traveltime: "+date);
 			
-			System.out.println("INSERT INTO SUBROUTS () VALUES {"+ssubcosts+","+ssubdistance+","+ssubemissions+","+ssubtraveltime+","+ssubtransport+","+ssubstart+","+startdate.toString("yyyy-MM-dd HH:mm:ss")+","+ssubend+","+enddate.toString("yyyy-MM-dd HH:mm:ss")+"}");
+			System.out.println("SubRouteID: "+subrouteID+" RouteID: "+routeID);
+//			System.out.println("INSERT INTO SUBROUTS () VALUES {"+ssubcosts+","+ssubdistance+","+ssubemissions+","+ssubtraveltime+","+ssubtransport+","+ssubstart+","+startdate.toString("yyyy-MM-dd HH:mm:ss")+","+ssubend+","+enddate.toString("yyyy-MM-dd HH:mm:ss")+"}");
+			MSSQLConnection.insertSubRoute(subrouteID, routeID, ssubcosts, ssubdistance, ssubemissions, ssubtraveltime, ssubtransport, ssubstart, ssubstarttime, ssubend, ssubendtime);
 		}
 		else
 		{

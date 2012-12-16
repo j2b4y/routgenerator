@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.joda.time.DateTime;
+
 public class MSSQLConnection {
 	
 	private static Connection conn = null;
@@ -68,15 +70,13 @@ public class MSSQLConnection {
 		return result;
     }
 	
-	public static void insertRout( String costs, String distance, String emissions, String traveltime){
+	public static void insertRout( int userID, int requestID, int routeID, String costs, String distance, String emissions, String traveltime){
 		
 		conn = getInstance();
 		
-		int userID = 1234;
-		int requestID = 4567;
-		int TripID = 98710;
 		int needID = 1;
 		
+		//Problem mit traveltime
 		traveltime = "";
 	 
 		
@@ -85,8 +85,8 @@ public class MSSQLConnection {
 			try{
 				query = conn.createStatement();
                 
-                String sql = "insert into [JinengoOperationalCRM_Copy].[dbo].[temprouts] ([UserID], [TripID], [RequestID],[cost], [distance], [emission], " +
-                		"[traveltime], [NeedID]) values ( '"+userID+"','"+requestID+"','"+TripID+"','"+Float.valueOf(costs)+"'," +
+                String sql = "insert into [JinengoOperationalCRM_Copy].[dbo].[temprouts] ([UserID], [RequestID], [TripID], [cost], [distance], [emission], " +
+                		"[traveltime], [NeedID]) values ( '"+userID+"','"+requestID+"','"+routeID+"','"+Float.valueOf(costs)+"'," +
                 				"'"+Float.valueOf(distance)+"','"+Float.valueOf(emissions)+"','"+traveltime+"','"+needID+"')";
                
                 query.executeUpdate(sql);
@@ -102,9 +102,17 @@ public class MSSQLConnection {
 		
 	}
 	
-	public static void insertSubRoute(){
+	public static void insertSubRoute(int subrouteID, int routeID, String ssubcosts,  String ssubdistance, String ssubemissions, String ssubtraveltime, String ssubtransport, String ssubstart, String ssubstarttime, String ssubend, String ssubendtime ){
 		
 		conn = getInstance();
+		//Problem mit ssubtraveltime!
+		ssubtraveltime = "";
+		ssubstarttime = "";
+		ssubendtime = "";
+		
+//		DateTime startdate = new DateTime(Long.parseLong(ssubstarttime));
+//		DateTime enddate = new DateTime(Long.parseLong(ssubendtime));
+//		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		if(conn!=null){
 			Statement query;
@@ -112,7 +120,9 @@ public class MSSQLConnection {
 			try{
 				query = conn.createStatement();
 				
-				String sql = "insert into [JinengoOperationalCRM_Copy].[dbo].[tempsubrouts]";
+				String sql = "insert into [JinengoOperationalCRM_Copy].[dbo].[tempsubrouts] ([SubroutenID], [TripID], [cost], [distance], [emission], [traveltime], [transpor" +
+						"tation], [start], [starttime], [end], [endtime]) values ('"+subrouteID+"','"+routeID+"','"+Float.valueOf(ssubcosts)+"','"+Float.valueOf(ssubdistance)+"'" +
+								",'"+Float.valueOf(ssubemissions)+"','"+ssubtraveltime+"','"+ssubtransport+"','"+ssubstart+"','"+ssubstarttime+"','"+ssubend+"','"+ssubendtime+"')";
 				
 				query.executeUpdate(sql);
 			}
