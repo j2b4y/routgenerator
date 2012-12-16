@@ -2,6 +2,8 @@ package ReadRESTAPI;
 
 import java.io.InputStream;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
@@ -46,8 +48,12 @@ public class staxxmlreader {
 	String ssubend ="";
 	String ssubendtime="";
 	int subroutscounter = 0;
+	int requestID;
+	int routeID;
+	int subrouteID;
+	
 
-	public void streamreader(InputStream stream) throws XMLStreamException, FactoryConfigurationError{
+	public void streamreader(InputStream stream, int userID) throws XMLStreamException, FactoryConfigurationError{
 		
 		XMLStreamReader xmlStreamReader = XMLInputFactory.newInstance().createXMLStreamReader(stream);
 		
@@ -58,6 +64,8 @@ public class staxxmlreader {
 		  {
 		    case XMLStreamConstants.START_DOCUMENT:
 //		      System.out.println( "START_DOCUMENT: " + xmlStreamReader.getVersion() );
+		      idgenerator req = new idgenerator();
+		      requestID = req.genRequestID()	;
 		      break;
 
 		    case XMLStreamConstants.END_DOCUMENT:
@@ -74,6 +82,8 @@ public class staxxmlreader {
 		    	switch(xmlStreamReader.getLocalName())
 		    	{
 		    	case "route":
+		    		idgenerator route = new idgenerator();
+		    		routeID = route.genRoutID();
 		    		bstartroute = true;
 		    		break;
 		    	
@@ -209,6 +219,8 @@ public class staxxmlreader {
 		    		break;
 		    		
 		    	case "subroute":
+		    		idgenerator subroute = new idgenerator();
+		    		subrouteID = subroute.genSubRoutID();
 		    		subrouthandler();
 		    		break;
 
@@ -226,11 +238,12 @@ public class staxxmlreader {
 		if(stotalcosts!="" && stotaldistance != "" && stotalemissions != "" && stotaltraveltime != "")
 		{
 			DateTime traveltime = new DateTime((long) (Float.parseFloat(stotaltraveltime)));
-			
-			System.out.println("----> " + traveltime.toString("HH:mm:ss"));
+
+//			System.out.println("TimeZone: "+traveltime.getZone());
+//			System.out.println("----> " + traveltime.toString("HH:mm:ss"));
 			
 			System.out.println("INSERT INTO ROUTS () VALUES {"+stotalcosts+","+stotaldistance+","+stotalemissions+","+stotaltraveltime+"}");
-			MSSQLConnection.insertRout(stotalcosts, stotaldistance, stotalemissions, stotaltraveltime);
+//			MSSQLConnection.insertRout(stotalcosts, stotaldistance, stotalemissions, stotaltraveltime);
 		}
 		else
 		{
@@ -252,12 +265,12 @@ public class staxxmlreader {
 			DateTime startdate = new DateTime(Long.parseLong(ssubstarttime));
 			DateTime enddate = new DateTime(Long.parseLong(ssubendtime));
 			
-			DateTime date = enddate.minus(Long.parseLong(ssubstarttime));
-			
-			System.out.println("starttime: "+ssubstarttime);
-			System.out.println("endtime: "+ssubendtime);
-			System.out.println("traveltime: "+ssubtraveltime);
-			System.out.println("traveltime: "+date);
+//			DateTime date = enddate.minus(Long.parseLong(ssubstarttime));
+//			
+//			System.out.println("starttime: "+ssubstarttime);
+//			System.out.println("endtime: "+ssubendtime);
+//			System.out.println("traveltime: "+ssubtraveltime);
+//			System.out.println("traveltime: "+date);
 			
 			System.out.println("INSERT INTO SUBROUTS () VALUES {"+ssubcosts+","+ssubdistance+","+ssubemissions+","+ssubtraveltime+","+ssubtransport+","+ssubstart+","+startdate.toString("yyyy-MM-dd HH:mm:ss")+","+ssubend+","+enddate.toString("yyyy-MM-dd HH:mm:ss")+"}");
 		}

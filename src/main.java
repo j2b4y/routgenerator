@@ -22,6 +22,7 @@ public class main {
 	public static void main(String[] args) {
 		
 		String token = "7a2ba89a-787f-4b42-83cf-f990497e82c8";
+		int userID = 123;
 		
 		csvreader destinations = new csvreader();
 		List destinationresult = destinations.csvhandler("destinations.csv");
@@ -46,7 +47,7 @@ public class main {
 		
 		staxxmlreader reader = new staxxmlreader();
 		try{
-			reader.streamreader(is);
+			reader.streamreader(is, userID);
 		}
 		catch(XMLStreamException xmle){
 			System.out.println(xmle);
