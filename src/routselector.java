@@ -81,7 +81,23 @@ class routselector {
 		}
 	}
 	
-	
+	public void routeassign(int userID){
+		
+		String query = "SELECT DISTINCT(RequestID) FROM [JinengoOperationalCRM_Copy].[dbo].[temprouts] where UserID="+userID;
+		ResultSet res = MSSQLConnection.selectSomething(query);
+		
+		try{
+			while(res.next()){
+				
+				
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		
+	}
 	
 
 }
