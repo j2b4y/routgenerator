@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -18,10 +19,7 @@ public class main {
 
 	/**
 	 * @param args
-	 */
-	
-	
-	
+	 */	
 	public static void main(String[] args) {
 		
 		System.out.println("Starten sie eine Aktion mittels Zahl:");
@@ -41,7 +39,7 @@ public class main {
 				int userID = 123;
 				
 				csvreader destinations = new csvreader();
-				List destinationresult = destinations.csvhandler("destinations.csv");
+				ArrayList<String> destinationresult = destinations.csvhandler("destinations.csv");
 				
 				int entrys = destinationresult.size();
 				
