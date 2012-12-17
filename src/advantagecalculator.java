@@ -1,42 +1,50 @@
+import java.sql.ResultSet;
+
+import DBConnection.MSSQLConnection;
+
 
 public class advantagecalculator {
 	
-	public float getEmissionAdv(int userID, int requestID, float emission){
+	public static float getEmissionAdv(int userID, int requestID, float emission){
 		
 		float advantage = 0;
 		
 		String query = "SELECT MAX(Emission) FROM dbo.temprouts where UserID="+userID+" AND RequestID="+requestID;
-		String query2 = "SELECT MIN(Emission) FROM dbo.temprouts where UserID="+userID+" AND RequestID="+requestID;
+		ResultSet advantagereq = MSSQLConnection.selectSomething(query);
+		float anothervalue=0;
+		
+		try{
+			advantagereq.next();
+			anothervalue = advantagereq.getFloat(1);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		advantage = anothervalue-emission;
 		
 		return advantage;
 	}
 	
-//	public float getComfAdv(int userID, int requestID, float comfort){
-//		
-//		float advantage = 0;
-//		
-//		String query = "SELECT MAX(Emission) FROM dbo.temprouts where UserID="+userID+" AND RequestID="+requestID;
-//		
-//		return advantage;
-//	}
-
-	public float getCostAdv(int userID, int requestID, float cost){
+	public static float getEmissionDisAdv(int userID, int requestID, float emission){
 		
-		float advantage = 0;
+		float disadvantage = 0;
 		
-		String query = "SELECT MAX(Cost) FROM dbo.temprouts where UserID="+userID+" AND RequestID="+requestID;
-		String query2 = "SELECT MIN(Cost) FROM dbo.temprouts where UserID="+userID+" AND RequestID="+requestID;
+		String query = "SELECT MIN(Emission) FROM dbo.temprouts where UserID="+userID+" AND RequestID="+requestID;
+		ResultSet disadvantagereq = MSSQLConnection.selectSomething(query);
 		
-		return advantage;
+		float anothervalue=0;
+		
+		try{
+			disadvantagereq.next();
+			anothervalue = disadvantagereq.getFloat(1);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		disadvantage = anothervalue-emission;
+		
+		return disadvantage;
 	}
-	
-//	public float getTimeAdv(int userID, int requestID, float comfort){
-//		
-//		float advantage = 0;
-//		
-//		String query = "SELECT MAX(Emission) FROM dbo.temprouts where UserID="+userID+" AND RequestID="+requestID;
-//		
-//		return advantage;
-//	}
-
 }

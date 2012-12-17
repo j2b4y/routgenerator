@@ -83,19 +83,11 @@ class routselector {
 	}
 	
 	public void routeassign(int userID){
-		
-		float sustainableratio = sustainable/(sustainable+comftable+cost+time);
-		float comftableratio = comftable/(sustainable+comftable+cost+time);
-		float costratio = cost/(sustainable+comftable+cost+time);
-		float timeratio = time/(sustainable+comftable+cost+time);
-		
+	
 		String query = "SELECT DISTINCT(RequestID) FROM [JinengoOperationalCRM_Copy].[dbo].[temprouts] WHERE UserID="+userID;
 		ResultSet res = MSSQLConnection.selectSomething(query);
 		
 		try{
-			
-			boolean choosen = false;
-//			float random = Random.nextFloat();
 			
 			while(res.next()){
 				int reqID = res.getInt(1);
@@ -113,16 +105,26 @@ class routselector {
 				sus.next();
 				int mostsusroute = sus.getInt(1);
 				
-				ResultSet cost = MSSQLConnection.selectSomething(costquery);
-				cost.next();
-				int cheapestroute = cost.getInt(1);
-						
-				ResultSet comf = MSSQLConnection.selectSomething(comfquery);
-//				ResultSet time = MSSQLConnection.selectSomething(timequery);
+				int cheapestroute;
+				if(brailMembership){
+					//Folgende Zeilen nur fuer den Fall, dass mal mit verschiedenen Rabatten gerechnet wird, diese muessten dann aber 
+					//numerisch festgehalten werden!
+//					String railquery = "SELECT railMembershiptID FROM [JinengoOperationalCRM_Copy].[dbo].[JinengoUser] WHERE ID="+userID;
+//					ResultSet raimember = MSSQLConnection.selectSomething(railquery);
+					
+					ResultSet cost = MSSQLConnection.selectSomething(costquery);
+					cost.next();
+					cheapestroute = cost.getInt(1)/2;
+				}
+				else{
+					ResultSet cost = MSSQLConnection.selectSomething(costquery);
+					cost.next();
+					cheapestroute = cost.getInt(1);
+				}
 				
+				ResultSet comf = MSSQLConnection.selectSomething(comfquery);
 				float rating = 0;
 				int mostcomfroute = 0;
-				
 				while(comf.next()){
 					int routeID = comf.getInt(1);
 					if(rating<getComfRating(routeID)){
@@ -131,9 +133,11 @@ class routselector {
 						mostcomfroute = routeID;
 					}
 				}
+				
+//				ResultSet time = MSSQLConnection.selectSomething(timequery);
 
 				System.out.println("Nachhaltigste Route: "+mostsusroute+" --- Guenstigste Route: "+cheapestroute+" --- Komfortabelste Route: "+mostcomfroute);
-				
+				choose(userID, reqID, mostsusroute, cheapestroute, mostcomfroute);
 				
 			}
 		}
@@ -142,6 +146,60 @@ class routselector {
 		}
 		
 		
+	}
+	
+	public void choose(int userID, int reqID, int mostsusroute, int cheapestroute, int mostcomfroute){
+		
+		float sustainableratio = sustainable/(sustainable+comftable+cost+time);
+		float comftableratio = comftable/(sustainable+comftable+cost+time);
+		float costratio = cost/(sustainable+comftable+cost+time);
+		float timeratio = time/(sustainable+comftable+cost+time);
+		System.out.println("Nachhaltigkeit: "+sustainableratio+" --- Komfort: "+comftableratio+" --- Kosten: "+costratio+" --- Zeit: "+timeratio);
+		
+		Random Random = new Random();
+		float random=Random.nextFloat();
+		
+		System.out.println("Random: "+random);
+
+		if(random<sustainableratio){
+			System.out.println("---> Nachhaltige Route!");
+			float emission = 0;
+			String emissionreq = "SELECT emission FROM [JinengoOperationalCRM_Copy].[dbo].[temprouts] " +
+					"WHERE UserID="+userID+" AND RequestID="+reqID+" AND TripID="+mostsusroute;
+			ResultSet emissionrequest = MSSQLConnection.selectSomething(emissionreq);
+			try{
+				emissionrequest.next();
+				emission = emissionrequest.getFloat(1);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			//Beispielhafter Aufruf der ersten Advantage/Disadvantage Fkt.
+			// fuer Time und Komfort nicht ganz so leicht zu berechnen!
+			System.out.println("Advantage: "+advantagecalculator.getEmissionAdv(userID, reqID, emission));
+			System.out.println("Disadvantage: "+advantagecalculator.getEmissionDisAdv(userID, reqID, emission));
+			
+			/* weitere Ausnahmeregelungen wie Einbeziehung von maxDistancetoWalk folgen
+			*  Datenbank Insert Statement fehlt noch, da ich noch wissen muss, wie die finalen Tabellen Route und Subroute aussehen
+			*  --> Dabei am besten darauf achten, welchen Daten wir von der REST API bekommen
+			*/
+			
+		}
+		if(random>sustainableratio&&random<sustainableratio+comftableratio){
+			System.out.println("---> Komfortable Route!");
+			// Weiteres siehe erstes if
+		}
+		if(random>sustainableratio+comftableratio&&random<sustainableratio+comftableratio+costratio){
+			System.out.println("---> Guenstige Route!");
+			// Weiteres siehe erstes if
+		}
+		if(random>sustainableratio+comftableratio+costratio){
+			System.out.println("---> Schnelle Route!");
+			// Weiteres siehe erstes if
+		}
+
+
 	}
 	
 	public float getComfRating(int routeID){
@@ -172,6 +230,17 @@ class routselector {
 		}
 		return (Float)null;
 		
+	}
+	
+	// Platzhalter fuer kompliziertere Rabattberechnungen
+	public float getCostRating(int routeID){
+		float price=0;
+
+		/* ToDo:
+		 * Code
+		 */
+		
+		return price;
 	}
 	
 
