@@ -76,6 +76,7 @@ public class main {
 		    	//Preferences & Memberships laden
 		    	nutzer.getUserPref(userID);
 		    	nutzer.getUserMemberships(userID);
+		    	nutzer.routeassign(userID);
 		    	
 		    	
 		    

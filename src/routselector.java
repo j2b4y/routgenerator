@@ -1,5 +1,6 @@
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Random;
 
 import DBConnection.MSSQLConnection;
 
@@ -83,11 +84,55 @@ class routselector {
 	
 	public void routeassign(int userID){
 		
-		String query = "SELECT DISTINCT(RequestID) FROM [JinengoOperationalCRM_Copy].[dbo].[temprouts] where UserID="+userID;
+		float sustainableratio = sustainable/(sustainable+comftable+cost+time);
+		float comftableratio = comftable/(sustainable+comftable+cost+time);
+		float costratio = cost/(sustainable+comftable+cost+time);
+		float timeratio = time/(sustainable+comftable+cost+time);
+		
+		String query = "SELECT DISTINCT(RequestID) FROM [JinengoOperationalCRM_Copy].[dbo].[temprouts] WHERE UserID="+userID;
 		ResultSet res = MSSQLConnection.selectSomething(query);
 		
 		try{
+			
+			boolean choosen = false;
+//			float random = Random.nextFloat();
+			
 			while(res.next()){
+				int reqID = res.getInt(1);
+				
+				String susquery = "SELECT TripID FROM [JinengoOperationalCRM_Copy].[dbo].[temprouts] where" +
+						" UserId ="+userID+" AND RequestID="+reqID+" AND Emission=(SELECT MIN(Emission) FROM[JinengoOperationalCRM_Copy]" +
+								".[dbo].[temprouts] where UserId ="+userID+" AND RequestID="+reqID+")";
+				String costquery = "SELECT TripID FROM [JinengoOperationalCRM_Copy].[dbo].[temprouts] where" +
+						" UserId ="+userID+" AND RequestID="+reqID+" AND Emission=(SELECT MIN(Cost) FROM[JinengoOperationalCRM_Copy]" +
+						".[dbo].[temprouts] where UserId ="+userID+" AND RequestID="+reqID+")";
+				String comfquery = "SELECT DISTINCT(TripID) FROM [JinengoOperationalCRM_Copy].[dbo].[temprouts] WHERE UserID="+userID+" AND RequestID="+reqID;
+//				String timequery = "";
+				
+				ResultSet sus = MSSQLConnection.selectSomething(susquery);
+				sus.next();
+				int mostsusroute = sus.getInt(1);
+				
+				ResultSet cost = MSSQLConnection.selectSomething(costquery);
+				cost.next();
+				int cheapestroute = cost.getInt(1);
+						
+				ResultSet comf = MSSQLConnection.selectSomething(comfquery);
+//				ResultSet time = MSSQLConnection.selectSomething(timequery);
+				
+				float rating = 0;
+				int mostcomfroute = 0;
+				
+				while(comf.next()){
+					int routeID = comf.getInt(1);
+					if(rating<getComfRating(routeID)){
+						rating = getComfRating(routeID);
+						System.out.println("Komfort: "+rating);
+						mostcomfroute = routeID;
+					}
+				}
+
+				System.out.println("Nachhaltigste Route: "+mostsusroute+" --- Guenstigste Route: "+cheapestroute+" --- Komfortabelste Route: "+mostcomfroute);
 				
 				
 			}
@@ -96,6 +141,36 @@ class routselector {
 			e.printStackTrace();
 		}
 		
+		
+	}
+	
+	public float getComfRating(int routeID){
+		float comfrating = 0;
+		
+		String transportations = "SELECT Transportation FROM [JinengoOperationalCRM_Copy].[dbo].[tempsubrouts] WHERE TripID ="+routeID;
+		ResultSet transports = MSSQLConnection.selectSomething(transportations);
+		
+		try{
+			while(transports.next()){
+				String vehicle = transports.getString(1);
+				
+				String comfort = "SELECT comfortRating FROM [JinengoOperationalCRM_Copy].[dbo].[Transportation] WHERE classOrProviderName='"+vehicle+"'";
+				ResultSet comf = MSSQLConnection.selectSomething(comfort);
+				
+				int counter = 0;
+				
+				while(comf.next()){
+					comfrating += comf.getFloat(1);
+					counter++;
+				}
+				float rating = comfrating/counter;
+				return rating;
+			}	
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return (Float)null;
 		
 	}
 	
