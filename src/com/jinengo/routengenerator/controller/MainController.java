@@ -7,13 +7,24 @@ import org.w3c.dom.Document;
 import com.jinengo.routengenerator.api.ApiRequest;
 import com.jinengo.routengenerator.infrastructure.DestinationGenerator;
 import com.jinengo.routengenerator.infrastructure.RouteProcessor;
+import com.jinengo.routengenerator.infrastructure.SpecificRouteGenerator;
 import com.jinengo.routengenerator.model.UserModel;
 import com.jinengo.routengenerator.service.MSSQLConnectionHandler;
 import com.jinengo.routengenerator.service.UserHandler;
 
+/**
+ * Main Controller to handle the data generation process
+ * 
+ * @author lars & christopher
+ *
+ */
 public class MainController {
 	private UserHandler userHandler;
 	
+	/**
+	 * default constructor
+	 * initialize user handler to create user object list
+	 */
 	public MainController() {
 		this.userHandler = new UserHandler();
 	}
@@ -30,9 +41,8 @@ public class MainController {
 		//get detailed user information for user id's
 		ArrayList<UserModel> userList = generateUserList(userIds);
 		
-		
-		// generate route for specific user
-		// generateRoute();
+		// generate routes for a given userList
+		generateRoutes(userList);
 		
 		// close sql connection if open
 		MSSQLConnectionHandler.closeInstance();
@@ -58,20 +68,15 @@ public class MainController {
 	}
 	
 	/**
-	 * generate routes depending on selected user from user list
+	 * generate specific routes for a given user list
 	 */
-	private void generateRoute() {
+	private void generateRoutes(ArrayList<UserModel> userList) {
+    	SpecificRouteGenerator routeGen = new SpecificRouteGenerator(); 
     	
-    	// generate random destinations
-		DestinationGenerator dm = new DestinationGenerator(); 
-		ArrayList<String> destinations = dm.getRandomDestinations();
+    	for (UserModel userModel : userList) {
+    		routeGen.generateSpecificRoute(userModel);
+		}
 		
-		// generate route depending on destinations
-		ApiRequest ar = new ApiRequest();
-		Document doc = ar.getXmlRouteDocument(destinations.get(0), destinations.get(1), "0");
-		
-		// process xml result and save it in route object
-		RouteProcessor rp = new RouteProcessor();
-		rp.processXmlDocument(doc);
 	};
+	
 }

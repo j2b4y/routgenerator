@@ -13,8 +13,22 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+/**
+ * Get XML Document containing route information from the jinengo api
+ * 
+ * @author lars & christopher
+ *
+ */
 public class ApiRequest {
 	
+	/**
+	 * get xml route document from jinengo api
+	 * 
+	 * @param startString - city to start
+	 * @param destinationString - city to end
+	 * @param starttime - time to start
+	 * @return Document with route information
+	 */
 	public Document getXmlRouteDocument(String startString, String destinationString, String starttime){
     	// token for jinengo api access
     	String token = "7a2ba89a-787f-4b42-83cf-f990497e82c8";

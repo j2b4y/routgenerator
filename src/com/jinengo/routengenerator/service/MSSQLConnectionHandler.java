@@ -4,6 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * The MSSQL connection to the jinengo database
+ * 
+ * @author lars & christopher
+ *
+ */
 public class MSSQLConnectionHandler {
 	private static Connection conn = null;
     private static String dbHost = "134.106.13.63";
@@ -45,6 +51,9 @@ public class MSSQLConnectionHandler {
 		return conn;
 	}
 	
+	/**
+	 * Close Connection Instance
+	 */
 	public static void closeInstance() {
 		if(conn != null){
 			try {

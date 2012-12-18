@@ -4,6 +4,12 @@ import java.util.ArrayList;
 
 import com.jinengo.routengenerator.service.CSVReader;
 
+/**
+ * Generate random start and end destination from csv list
+ * 
+ * @author lars & christopher
+ *
+ */
 public class DestinationGenerator {
 	
 	public ArrayList<String> getRandomDestinations() {

@@ -1,7 +1,13 @@
 package com.jinengo.routengenerator.model;
 
+/**
+ * The User Model
+ * 
+ * @author lars & christopher
+ *
+ */
 public class UserModel {
-	// user id
+	
 	private int ID;
 
 	//auswahl auto

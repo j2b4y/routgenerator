@@ -5,8 +5,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Standard CSV Reader
+ * 
+ * @author lars & christopher
+ *
+ */
 public class CSVReader {
-		
+	
+	/**
+	 * Handle CSV
+	 * 
+	 * @param file - csv filename
+	 * @return csvl list
+	 */
 	public ArrayList<String> csvhandler(String file){
 	
 	    FileReader myFile = null;

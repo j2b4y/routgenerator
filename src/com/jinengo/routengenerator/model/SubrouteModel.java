@@ -1,5 +1,11 @@
 package com.jinengo.routengenerator.model;
 
+/**
+ * The SubrouteModel
+ * 
+ * @author lars & christopher
+ *
+ */
 public class SubrouteModel {
 	
 	private int userID;

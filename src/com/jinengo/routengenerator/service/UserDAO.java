@@ -6,15 +6,32 @@ import java.util.ArrayList;
 
 import com.jinengo.routengenerator.model.UserModel;
 
+/**
+ * Data Access Object for User Details
+ * 
+ * @author lars & christopher
+ */
 public class UserDAO {
 	private QueryHandler queryHandler;
 	private String tableUserName;
 	
+	/**
+	 * Default Constructor
+	 * Initialize query handler and default table name
+	 * 
+	 * @param queryHandler - to handle database queries
+	 */
 	public UserDAO(QueryHandler queryHandler) {
 		this.queryHandler = queryHandler;
 		this.tableUserName = "A_SOURCE_JinengoUser";
 	}
 	
+	/**
+	 * Get a list of users who drive most often
+	 * 
+	 * @return user list
+	 * @throws SQLException
+	 */
 	public ArrayList<String> getMostActiveUser() throws SQLException {
 		
 		ArrayList<String> userIds = new ArrayList<String>();
@@ -24,8 +41,7 @@ public class UserDAO {
 						 	+ "ORDER BY RouteCount DESC";
 		
 		ResultSet res = this.queryHandler.selectSomething(sqlQuery);
-		
-		
+			
 		while (res.next()) {
 			userIds.add(res.getString("ID"));
 		}
@@ -33,6 +49,13 @@ public class UserDAO {
 		return userIds;
 	}
 	
+	/**
+	 * get the car sharing id for a given user id
+	 * 
+	 * @param userId
+	 * @return car sharing id
+	 * @throws SQLException
+	 */
 	public int getCarSharingId(String userId) throws SQLException {
 		int carSharingId = -1;
 		
@@ -46,24 +69,41 @@ public class UserDAO {
 		return carSharingId;
 	}
 	
+	/**
+	 * get the user preference for a given user id
+	 * 
+	 * @param userId
+	 * @return ResultSet with user preferences
+	 */
 	private ResultSet getUserPreferences(String userId) {
 		String sqlQuery = "SELECT sustainabilityPreference, comfortPreference, costsPreference, timePreference " 
 						+ "FROM preferences " 
 						+ "WHERE userID = " + userId;
 		
 		return this.queryHandler.selectSomething(sqlQuery);
-		
 	}
 	
+	/**
+	 * get the basic user data for a given user id
+	 * 
+	 * @param userId
+	 * @return ResultSet with basic user data
+	 */
 	private ResultSet getBasicUserData(String userId) {
 		String sqlQuery = "SELECT ID, incomeRangeID, familyStatusID, ownsPEV, ownsGasCar, ownsEbike, publicTransportMember, railMembershipID, maxDistanceToWalk, maxDistanceToBike "
 						+ "FROM " + this.tableUserName + " "
 						+ "WHERE ID = " + userId;
 		
 		return this.queryHandler.selectSomething(sqlQuery);
-		
 	}
 	
+	/**
+	 * Construct a detailed UserModel
+	 * 
+	 * @param userId
+	 * @return UserModel
+	 * @throws SQLException
+	 */
 	public UserModel getUserData(String userId) throws SQLException {
 		
 		// create new UserModel

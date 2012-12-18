@@ -2,18 +2,24 @@ package com.jinengo.routengenerator.model;
 
 import java.util.ArrayList;
 
+/**
+ * The RouteModel
+ * 
+ * @author lars & christopher
+ *
+ */
 public class RouteModel {
 	private float userID;
 	private float ID;
 	private float timeSelected;
-	private String departureGeography;
+	private String departureGeography = "";
 	private String departureAddress;
 	private float departureTime;
 	private String destinationGeography;
 	private String destinationAddress;
 	private float destinationTime;
 	private float totalTime;
-	private int needID;
+	private int needID = 1;
 	private boolean luggage;
 	private int passengers;
 	private float ecoImpactAdvantage;

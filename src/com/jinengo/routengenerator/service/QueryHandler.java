@@ -5,7 +5,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Basic Query Handler to handle Database Queries
+ * 
+ * @author lars & christopher
+ *
+ */
 public class QueryHandler {
+	
+	/**
+	 * Select query from Database
+	 * @param expression - sql expression
+	 * @return sql ResultSet
+	 */
 	public ResultSet selectSomething(String expression){
 		
     	Connection conn = MSSQLConnectionHandler.getInstance();
