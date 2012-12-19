@@ -23,34 +23,27 @@ public class UserHandler {
 	}
 	
 	/**
-	 * generate a list of UserID's
-	 * 
-	 * @return List of UserID's
-	 */
-	public ArrayList<String> generateUserIds() {
-		ArrayList<String> userList = new ArrayList<String>();
-
-		try {
-			userList = this.userDao.getMostActiveUser();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return userList;
-	}
-	
-	/**
 	 * Query User details for every given ID and return them as list
 	 * 
 	 * @param userIds - List of user ids
 	 * @return list with user details
 	 */
-	public ArrayList<UserModel> generateUserList(ArrayList<String> userIds) {
+	public ArrayList<UserModel> generateUserList() {
 		ArrayList<UserModel> userList = new ArrayList<UserModel>();
-
+		boolean isActive = false;
+		
 		try {
+			// generate list of user id's for calculating route
+			// max result count as param
+			ArrayList<String> userIds = this.userDao.getAllUserIds(2);
+			
+			// generate list of active user id's to get more route for active user
+			// max result count as param
+			ArrayList<String> activeUserIds = this.userDao.getMostActiveUserIds(1);
+			
 			for (String userId : userIds) {
-				userList.add(this.userDao.getUserData(userId));
+				isActive = activeUserIds.indexOf(userId) != -1;
+				userList.add(this.userDao.getUserData(userId, isActive));
 			}
 			
 		} catch (SQLException e) {

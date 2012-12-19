@@ -2,6 +2,8 @@ package com.jinengo.routengenerator.model;
 
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
+
 /**
  * The RouteModel
  * 
@@ -9,16 +11,19 @@ import java.util.ArrayList;
  *
  */
 public class RouteModel {
-	private float userID;
-	private float ID;
+	private int userID;
+	private int ID;
 	private float timeSelected;
 	private String departureGeography = "";
 	private String departureAddress;
-	private float departureTime;
+	private DateTime departureTime;
 	private String destinationGeography;
 	private String destinationAddress;
-	private float destinationTime;
+	private DateTime destinationTime;
 	private float totalTime;
+	private float totalDistance;
+	private float totalEmission;
+	private float totalCost;
 	private int needID = 1;
 	private boolean luggage;
 	private int passengers;
@@ -32,16 +37,16 @@ public class RouteModel {
 	private float costDisadvantage;
 	private ArrayList<SubrouteModel> subroutes;
 	
-	public float getUserID() {
+	public int getUserID() {
 		return userID;
 	}
-	public void setUserID(float userID) {
+	public void setUserID(int userID) {
 		this.userID = userID;
 	}
-	public float getID() {
+	public int getID() {
 		return ID;
 	}
-	public void setID(float iD) {
+	public void setID(int iD) {
 		ID = iD;
 	}
 	public float getTimeSelected() {
@@ -62,10 +67,10 @@ public class RouteModel {
 	public void setDepartureAddress(String departureAddress) {
 		this.departureAddress = departureAddress;
 	}
-	public float getDepartureTime() {
+	public DateTime getDepartureTime() {
 		return departureTime;
 	}
-	public void setDepartureTime(float departureTime) {
+	public void setDepartureTime(DateTime departureTime) {
 		this.departureTime = departureTime;
 	}
 	public String getDestinationGeography() {
@@ -80,10 +85,10 @@ public class RouteModel {
 	public void setDestinationAddress(String destinationAddress) {
 		this.destinationAddress = destinationAddress;
 	}
-	public float getDestinationTime() {
+	public DateTime getDestinationTime() {
 		return destinationTime;
 	}
-	public void setDestinationTime(float destinationTime) {
+	public void setDestinationTime(DateTime destinationTime) {
 		this.destinationTime = destinationTime;
 	}
 	public float getTotalTime() {
@@ -91,6 +96,24 @@ public class RouteModel {
 	}
 	public void setTotalTime(float totalTime) {
 		this.totalTime = totalTime;
+	}
+	public float getTotalDistance() {
+		return totalDistance;
+	}
+	public void setTotalDistance(float totalDistance) {
+		this.totalDistance = totalDistance;
+	}
+	public float getTotalEmission() {
+		return totalEmission;
+	}
+	public void setTotalEmission(float totalEmission) {
+		this.totalEmission = totalEmission;
+	}
+	public float getTotalCost() {
+		return totalCost;
+	}
+	public void setTotalCost(float totalCost) {
+		this.totalCost = totalCost;
 	}
 	public int getNeedID() {
 		return needID;
@@ -164,7 +187,6 @@ public class RouteModel {
 	public void setSubroutes(ArrayList<SubrouteModel> subroutes) {
 		this.subroutes = subroutes;
 	}
-	
-	
+
 }
 

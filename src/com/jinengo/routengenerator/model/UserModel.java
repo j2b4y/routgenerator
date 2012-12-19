@@ -44,6 +44,9 @@ public class UserModel {
 	private float costsPreference;
 	private float timePreference;
 	
+	// is active user
+	private boolean isActiveUser;
+	
 	// getter and setter
 	public int getID() {
 		return ID;
@@ -135,5 +138,10 @@ public class UserModel {
 	public void setTimePreference(float timePreference) {
 		this.timePreference = timePreference;
 	}
-	
+	public boolean isActiveUser() {
+		return isActiveUser;
+	}
+	public void setActiveUser(boolean isActiveUser) {
+		this.isActiveUser = isActiveUser;
+	}
 }

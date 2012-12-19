@@ -2,6 +2,7 @@ package com.jinengo.routengenerator.infrastructure;
 
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -9,7 +10,6 @@ import org.w3c.dom.NodeList;
 
 import com.jinengo.routengenerator.model.RouteModel;
 import com.jinengo.routengenerator.model.SubrouteModel;
-import com.jinengo.routengenerator.model.UserModel;
 
 /**
  * Process Route Document an Map it to RouteModel and SubrouteModel
@@ -18,11 +18,9 @@ import com.jinengo.routengenerator.model.UserModel;
  *
  */
 public class RouteProcessor {
-
-	private UserModel userModel;
 	
-	public RouteProcessor(UserModel userModel) {
-		this.userModel = userModel;		
+	private String getNodeValue(String nodeName, Element elem, int pos){
+		return elem.getElementsByTagName(nodeName).item(pos).getTextContent();
 	}
 	
 	private String getNodeValue(String nodeName, Element elem){
@@ -34,8 +32,11 @@ public class RouteProcessor {
 		subrouteModel.setCosts(Float.parseFloat(getNodeValue("costs", subRouteElem)));
 		subrouteModel.setDistance(Float.parseFloat(getNodeValue("distance", subRouteElem)));
 		subrouteModel.setEcoImpact(Float.parseFloat(getNodeValue("emissions", subRouteElem)));
-		//subrouteModel.setTime(Integer.parseInt(getNodeValue("traveltime", subRouteElem)));
-		
+		subrouteModel.setTime((int)Float.parseFloat(getNodeValue("traveltime", subRouteElem)));
+		subrouteModel.setDepartureAddress(getNodeValue("name", subRouteElem, 0));
+		subrouteModel.setDepartureTime(new DateTime((long)Float.parseFloat(getNodeValue("starttime", subRouteElem))));
+		subrouteModel.setDestinationAddress(getNodeValue("name", subRouteElem, 1));
+		subrouteModel.setDestinationTime(new DateTime((long)Float.parseFloat(getNodeValue("duetime", subRouteElem))));
 		return subrouteModel;
 	}
 	
@@ -55,13 +56,16 @@ public class RouteProcessor {
                 subRoutes.add(processSubRouteElement(subRouteElement));
     		}
     	}
+    	
 		// Set all subroute to route model
     	routeModel.setSubroutes(subRoutes);
 		
 		// Set Route properties
-		String totalTime = routeElem.getElementsByTagName("totaltraveltime").item(0).getTextContent();
-		routeModel.setTotalTime(Float.parseFloat(totalTime));
-
+    	routeModel.setTotalCost(Float.parseFloat(getNodeValue("totalcosts", routeElem)));
+    	routeModel.setTotalDistance(Float.parseFloat(getNodeValue("totaldistance", routeElem)));
+    	routeModel.setTotalEmission(Float.parseFloat(getNodeValue("totalemission", routeElem)));
+    	routeModel.setTotalTime(Float.parseFloat(getNodeValue("totaltraveltime", routeElem)));
+		
 		return routeModel;
 	}
 	

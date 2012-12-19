@@ -1,5 +1,7 @@
 package com.jinengo.routengenerator.model;
 
+import org.joda.time.DateTime;
+
 /**
  * The SubrouteModel
  * 
@@ -14,10 +16,10 @@ public class SubrouteModel {
 	private int transportationID;
 	private String departureGeography;
 	private String departureAddress;
-	private String departureTime;
+	private DateTime departureTime;
 	private String destinationGeography;
 	private String destinationAddress;
-	private String destinationTime;
+	private DateTime destinationTime;
 	private float distance;
 	private int time;
 	private int timeUsable;
@@ -61,10 +63,10 @@ public class SubrouteModel {
 	public void setDepartureAddress(String departureAddress) {
 		this.departureAddress = departureAddress;
 	}
-	public String getDepartureTime() {
+	public DateTime getDepartureTime() {
 		return departureTime;
 	}
-	public void setDepartureTime(String departureTime) {
+	public void setDepartureTime(DateTime departureTime) {
 		this.departureTime = departureTime;
 	}
 	public String getDestinationGeography() {
@@ -79,10 +81,10 @@ public class SubrouteModel {
 	public void setDestinationAddress(String destinationAddress) {
 		this.destinationAddress = destinationAddress;
 	}
-	public String getDestinationTime() {
+	public DateTime getDestinationTime() {
 		return destinationTime;
 	}
-	public void setDestinationTime(String destinationTime) {
+	public void setDestinationTime(DateTime destinationTime) {
 		this.destinationTime = destinationTime;
 	}
 	public float getDistance() {
@@ -121,5 +123,5 @@ public class SubrouteModel {
 	public void setContextInformation(String contextInformation) {
 		this.contextInformation = contextInformation;
 	}
-	
+		
 }

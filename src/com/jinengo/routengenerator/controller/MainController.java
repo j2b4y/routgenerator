@@ -1,13 +1,13 @@
 package com.jinengo.routengenerator.controller;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.w3c.dom.Document;
 
 import com.jinengo.routengenerator.api.ApiRequest;
 import com.jinengo.routengenerator.infrastructure.DestinationGenerator;
 import com.jinengo.routengenerator.infrastructure.RouteProcessor;
-import com.jinengo.routengenerator.infrastructure.SpecificRouteGenerator;
 import com.jinengo.routengenerator.model.UserModel;
 import com.jinengo.routengenerator.service.MSSQLConnectionHandler;
 import com.jinengo.routengenerator.service.UserHandler;
@@ -34,12 +34,9 @@ public class MainController {
 	 * query user ids and user details
 	 * select routes depending on user preferences and save to db
 	 */
-	public void generateData() {
-		// generate list of user id's for calculating route
-		ArrayList<String> userIds = generateUserIds();
-		
-		//get detailed user information for user id's
-		ArrayList<UserModel> userList = generateUserList(userIds);
+	public void generateData() {		
+		//get a list of detailed users
+		ArrayList<UserModel> userList = generateUserList();
 		
 		// generate routes for a given userList
 		generateRoutes(userList);
@@ -49,34 +46,38 @@ public class MainController {
 	}
 	
 	/**
-	 * generate list of user ID's from active user
-	 * 
-	 * @return list of user ID's
-	 */
-	private ArrayList<String> generateUserIds() {
-		return this.userHandler.generateUserIds();
-	}
-	
-	/**
 	 * generate list of user details depending in given user ID
 	 * 
 	 * @param userIds - List of user ID's
 	 * @return list of user
 	 */
-	private ArrayList<UserModel> generateUserList(ArrayList<String> userIds) {
-		return this.userHandler.generateUserList(userIds);
+	private ArrayList<UserModel> generateUserList() {
+		return this.userHandler.generateUserList();
 	}
 	
 	/**
 	 * generate specific routes for a given user list
 	 */
 	private void generateRoutes(ArrayList<UserModel> userList) {
-    	SpecificRouteGenerator routeGen = new SpecificRouteGenerator(); 
+		RouteController routeController = new RouteController(); 
+    	Random rnd = new Random();
     	
     	for (UserModel userModel : userList) {
-    		routeGen.generateSpecificRoute(userModel);
+    		
+    		
+    		if(userModel.isActiveUser()){
+    			// Drive max 3 times a day if active
+    			int routesPerDay = rnd.nextInt(3) + 1;
+    			for (int i = 0; i < routesPerDay; i++) {
+    				routeController.generateSpecificRoute(userModel);
+				}
+    		} else {
+    			// Drive only every third day if not active
+    			int prblty = rnd.nextInt(3) + 1;
+    			if(prblty == 3){
+    				routeController.generateSpecificRoute(userModel);
+    			}
+    		}	
 		}
-		
-	};
-	
+	}
 }

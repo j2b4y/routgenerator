@@ -32,13 +32,35 @@ public class UserDAO {
 	 * @return user list
 	 * @throws SQLException
 	 */
-	public ArrayList<String> getMostActiveUser() throws SQLException {
+	public ArrayList<String> getMostActiveUserIds(int maxCnt) throws SQLException {
 		
 		ArrayList<String> userIds = new ArrayList<String>();
 		
-		String sqlQuery = 	"SELECT TOP 5 ID, (SELECT COUNT(1) FROM Route WHERE userID = u.ID ) RouteCount "
+		String sqlQuery = 	"SELECT TOP " + maxCnt + " ID, (SELECT COUNT(1) FROM Route WHERE userID = u.ID ) RouteCount "
 						 	+ "FROM " + this.tableUserName + " u "
 						 	+ "ORDER BY RouteCount DESC";
+		
+		ResultSet res = this.queryHandler.selectSomething(sqlQuery);
+			
+		while (res.next()) {
+			userIds.add(res.getString("ID"));
+		}
+		
+		return userIds;
+	}
+	
+	/**
+	 * Get a list of all user ids
+	 * 
+	 * @return user list
+	 * @throws SQLException
+	 */
+	public ArrayList<String> getAllUserIds(int maxCnt) throws SQLException {
+		
+		ArrayList<String> userIds = new ArrayList<String>();
+		
+		String sqlQuery = 	"SELECT TOP " + maxCnt + " ID "
+						 	+ "FROM " + this.tableUserName;
 		
 		ResultSet res = this.queryHandler.selectSomething(sqlQuery);
 			
@@ -104,7 +126,7 @@ public class UserDAO {
 	 * @return UserModel
 	 * @throws SQLException
 	 */
-	public UserModel getUserData(String userId) throws SQLException {
+	public UserModel getUserData(String userId, boolean isActive) throws SQLException {
 		
 		// create new UserModel
 		UserModel userModel = new UserModel();
@@ -122,6 +144,7 @@ public class UserDAO {
 			userModel.setRailMembership(res.getInt("railMembershipID"));
 			userModel.setMaxDistanceToWalk(res.getInt("maxDistanceToWalk"));
 			userModel.setMaxDistanceToBike(res.getInt("maxDistanceToBike"));
+			userModel.setActiveUser(isActive);
 		} else {
 			System.out.println("Keine User Daten gefunden für User: " + userId);
 		}
