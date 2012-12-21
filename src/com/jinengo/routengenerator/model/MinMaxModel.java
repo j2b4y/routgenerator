@@ -13,8 +13,6 @@ public class MinMaxModel {
 	public void initialize(ArrayList<RouteModel> routeList) {
 		
 		for (RouteModel routeModel : routeList) {
-			float m = routeModel.getTotalCost();
-			float n = m;
 			this.maxCost = Math.max(this.maxCost, routeModel.getTotalCost());
 			this.maxEmission = Math.max(this.maxEmission, routeModel.getTotalEmission());
 			this.maxTraveltime = Math.max(this.maxTraveltime, routeModel.getTotalTime());

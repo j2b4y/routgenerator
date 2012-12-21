@@ -2,6 +2,9 @@ package com.jinengo.routengenerator.service;
 
 import java.sql.SQLException;
 
+import com.jinengo.routengenerator.model.RouteModel;
+import com.jinengo.routengenerator.model.SubrouteModel;
+import com.jinengo.routengenerator.model.UserModel;
 import com.jinengo.routengenerator.service.helper.QueryHandler;
 
 /**
@@ -22,7 +25,7 @@ private RouteDAO routeDAO;
 		this.routeDAO = new RouteDAO(new QueryHandler());
 	}
 	
-	public int getNewRouteId() {
+	private int getNewRouteId() {
 		int routeId = 0;
 		try {
 			routeId = this.routeDAO.getMaxRouteId() + 1;
@@ -32,7 +35,7 @@ private RouteDAO routeDAO;
 		return routeId;
 	}
 	
-	public int getNewSubRouteId() {
+	private int getNewSubRouteId() {
 		int routeId = 0;
 		try {
 			routeId = this.routeDAO.getMaxSubRouteId() + 1;
@@ -50,5 +53,18 @@ private RouteDAO routeDAO;
 			e.printStackTrace();
 		}
 		return comfRating;
+	}
+	
+	public void saveRoute(RouteModel routeModel, UserModel userModel) {
+		int routeId = getNewRouteId();
+		routeModel.setID(routeId);
+		try {
+			this.routeDAO.insertRoute(routeModel);
+			for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
+				this.routeDAO.insertSubRoute(subrouteModel);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import org.w3c.dom.Document;
 
 import com.jinengo.routengenerator.api.ApiRequest;
+import com.jinengo.routengenerator.infrastructure.RouteDecisionMaker;
 import com.jinengo.routengenerator.infrastructure.RouteExpander;
 import com.jinengo.routengenerator.infrastructure.RouteMapper;
 import com.jinengo.routengenerator.model.RouteModel;
 import com.jinengo.routengenerator.model.UserModel;
+import com.jinengo.routengenerator.service.RouteHandler;
 import com.jinengo.routengenerator.service.helper.DestinationGenerator;
 
 /**
@@ -41,8 +43,13 @@ public class RouteController {
 		RouteExpander routeExpander = new RouteExpander(userModel, routeList);
 		routeList = routeExpander.expandProperties();
 		
+		// decide wich route is fitting most to user model
+		RouteDecisionMaker routeDecisionMaker = new RouteDecisionMaker(userModel);
+		RouteModel routeModel = routeDecisionMaker.getMostFittingRoute(routeList);
 		
-		// todo decide wich route is fitting most
+		// write route to database
+		RouteHandler routeHandler = new RouteHandler();
+		routeHandler.saveRoute(routeModel, userModel);
 	}
 	
 }

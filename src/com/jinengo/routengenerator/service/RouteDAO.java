@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.jinengo.routengenerator.model.RouteModel;
+import com.jinengo.routengenerator.model.SubrouteModel;
 import com.jinengo.routengenerator.service.helper.MSSQLConnectionHandler;
 import com.jinengo.routengenerator.service.helper.QueryHandler;
 
@@ -32,7 +34,7 @@ public class RouteDAO {
 		
 		ResultSet res = this.queryHandler.selectSomething(sqlQuery);
 		if(res.next()) {
-			maxId = res.getInt("carSharingProviderID");
+			maxId = res.getInt("maxID");
 		}
 		return maxId;
 	}
@@ -50,7 +52,7 @@ public class RouteDAO {
 		
 		ResultSet res = this.queryHandler.selectSomething(sqlQuery);
 		if(res.next()) {
-			maxId = res.getInt("carSharingProviderID");
+			maxId = res.getInt("maxID");
 		}
 		return maxId;
 	}
@@ -68,32 +70,50 @@ public class RouteDAO {
 		return comfRating;
 	}
 	
-	public void insertRout( int userID, int requestID, int routeID, String costs, String distance, String emissions, String traveltime){
+	public void insertRoute(RouteModel routeModel) throws SQLException{
 		
 		Connection conn = MSSQLConnectionHandler.getInstance();
-		
-		int needID = 1;
-		
-		//Problem mit traveltime
-		traveltime = "";
-	 
-		if(conn!=null){
-			Statement query;
-			try{
-				query = conn.createStatement();
+		Statement query;
+		query = conn.createStatement();
                 
-                String sql = "insert into [JinengoOperationalCRM_Copy].[dbo].[temprouts] ([UserID], [RequestID], [TripID], [cost], [distance], [emission], " +
-                		"[traveltime], [NeedID]) values ( '"+userID+"','"+requestID+"','"+routeID+"','"+Float.valueOf(costs)+"'," +
-                				"'"+Float.valueOf(distance)+"','"+Float.valueOf(emissions)+"','"+traveltime+"','"+needID+"')";
-               
-                query.executeUpdate(sql);
-			}
-			catch (SQLException e){
-				System.out.println("SQL-Fehler: " + e);
-                e.printStackTrace();
-			}
-			
-		}
+        String sql = "INSERT INTO " + this.tableRoute + " VALUES ("
+            		+ routeModel.getID() + ", "
+            		+ routeModel.getUserID() + ", "
+            		+ routeModel.getDepartureAddress() + ", "
+            		+ routeModel.getDestinationAddress() + ", "
+            		+ routeModel.getDepartureTime() + ", "
+            		+ routeModel.getDestinationTime() + ", "
+            		+ routeModel.getTotalDistance() + ", "
+            		+ routeModel.getTotalCost() + ", "
+            		+ routeModel.getTotalEmission() + ", "
+            		+ 0 + ", "
+            		+ 0 + ", "
+            		+ 0 + ", "
+            		+ 0 + ", "
+            		+ 0 + ", "
+            		+ 0 + ", "
+            		+ 0 + ", "
+            		+ 0 + ", "
+            		+ 0 + ", "
+            		+ routeModel.getTotalTime() + ", "
+            		+ routeModel.getTotalTime() + ", "
+            		+ ");";
+                
+        query.executeUpdate(sql);
+		
+	}
+	
+	public void insertSubRoute(SubrouteModel subrouteModel) throws SQLException{
+		
+		Connection conn = MSSQLConnectionHandler.getInstance();
+		Statement query;
+		query = conn.createStatement();
+                
+        String sql = "INSERT INTO " + this.tableRoute + " VALUES ("
+        		+ subrouteModel.getID() + ", "
+        		+ ");";
+            
+         query.executeUpdate(sql);
 		
 	}
 }
