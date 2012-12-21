@@ -12,41 +12,45 @@ import com.jinengo.routengenerator.model.RouteModel;
 import com.jinengo.routengenerator.model.SubrouteModel;
 
 /**
- * Process Route Document an Map it to RouteModel and SubrouteModel
+ * Process Route Document an map it to RouteModel and SubrouteModel
+ * Calculates values wich are not returned from the jinengo api
  * 
  * @author lars & christopher
  *
  */
-public class RouteProcessor {
+public class RouteMapper {
 	
-	private String getNodeValue(String nodeName, Element elem, int pos){
-		return elem.getElementsByTagName(nodeName).item(pos).getTextContent();
-	}
-	
+	/**
+	 * Helper to get node values from xml document
+	 * 
+	 * @param nodeName - XML Node Name
+	 * @param elem - XML Element
+	 * @return String - Node value
+	 */
 	private String getNodeValue(String nodeName, Element elem){
 		return elem.getElementsByTagName(nodeName).item(0).getTextContent();
 	}
 	
+	/**
+	 * Map and calculate SubRoute values
+	 * 
+	 * @param subRouteElem
+	 * @return subRouteModel
+	 */
 	private SubrouteModel processSubRouteElement(Element subRouteElem) {
-		SubrouteModel subrouteModel = new SubrouteModel();
-		subrouteModel.setCosts(Float.parseFloat(getNodeValue("costs", subRouteElem)));
-		subrouteModel.setDistance(Float.parseFloat(getNodeValue("distance", subRouteElem)));
-		subrouteModel.setEcoImpact(Float.parseFloat(getNodeValue("emissions", subRouteElem)));
-		subrouteModel.setTime((int)Float.parseFloat(getNodeValue("traveltime", subRouteElem)));
-		subrouteModel.setDepartureAddress(getNodeValue("name", subRouteElem, 0));
-		subrouteModel.setDepartureTime(new DateTime((long)Float.parseFloat(getNodeValue("starttime", subRouteElem))));
-		subrouteModel.setDestinationAddress(getNodeValue("name", subRouteElem, 1));
-		subrouteModel.setDestinationTime(new DateTime((long)Float.parseFloat(getNodeValue("duetime", subRouteElem))));
-		return subrouteModel;
+		SubRouteMapper subRouteMapper = new SubRouteMapper();
+		return subRouteMapper.mapSubRoute(subRouteElem);
 	}
 	
-	private RouteModel processRouteElement(Element routeElem) {
-		RouteModel routeModel = new RouteModel();
+	/**
+	 * proces and map all subroutes
+	 * 
+	 * @param subRouteNodes
+	 * @return list of subroute
+	 */
+	private ArrayList<SubrouteModel> getSubroutes(NodeList subRouteNodes) {
 		ArrayList<SubrouteModel> subRoutes = new ArrayList<SubrouteModel>();
 		
-		// get subroutes from document
-		NodeList subRouteNodes = routeElem.getElementsByTagName("subroute");
-
     	int subRouteCount = subRouteNodes.getLength();
     	System.out.println(subRouteCount);
     	for (int i = 0; i < subRouteCount; i++) {
@@ -57,8 +61,20 @@ public class RouteProcessor {
     		}
     	}
     	
+    	return subRoutes;
+	}
+	
+	/**
+	 * Map and calculate Route calues
+	 * 
+	 * @param routeElem
+	 * @return routeModel
+	 */
+	private RouteModel processRouteElement(Element routeElem) {
+		RouteModel routeModel = new RouteModel();
+		
 		// Set all subroute to route model
-    	routeModel.setSubroutes(subRoutes);
+    	routeModel.setSubroutes(getSubroutes(routeElem.getElementsByTagName("subroute")));
 		
 		// Set Route properties
     	routeModel.setTotalCost(Float.parseFloat(getNodeValue("totalcosts", routeElem)));
@@ -69,6 +85,12 @@ public class RouteProcessor {
 		return routeModel;
 	}
 	
+	/**
+	 * Process the XML Document returned from the jinengo api
+	 * 
+	 * @param doc - route xml doc
+	 * @return route list
+	 */
 	public ArrayList<RouteModel> processXmlDocument(Document doc){
     	ArrayList<RouteModel> routeList = new ArrayList<RouteModel>();
     	

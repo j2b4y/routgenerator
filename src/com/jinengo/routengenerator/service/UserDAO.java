@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.jinengo.routengenerator.model.UserModel;
+import com.jinengo.routengenerator.service.helper.QueryHandler;
 
 /**
  * Data Access Object for User Details

@@ -1,4 +1,4 @@
-package com.jinengo.routengenerator.service;
+package com.jinengo.routengenerator.service.helper;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

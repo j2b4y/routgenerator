@@ -1,4 +1,4 @@
-package com.jinengo.routengenerator.service;
+package com.jinengo.routengenerator.service.helper;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

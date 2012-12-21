@@ -14,6 +14,7 @@ public class SubrouteModel {
 	private int routeID;
 	private int ID;
 	private int transportationID;
+	private String trasportationRaw;
 	private String departureGeography;
 	private String departureAddress;
 	private DateTime departureTime;
@@ -25,6 +26,7 @@ public class SubrouteModel {
 	private int timeUsable;
 	private float costs;
 	private float ecoImpact;
+	private float comfortRating;
 	private String contextInformation;
 	
 	public int getUserID() {
@@ -50,6 +52,12 @@ public class SubrouteModel {
 	}
 	public void setTransportationID(int transportationID) {
 		this.transportationID = transportationID;
+	}
+	public String getTrasportationRaw() {
+		return trasportationRaw;
+	}
+	public void setTrasportationRaw(String trasportationRaw) {
+		this.trasportationRaw = trasportationRaw;
 	}
 	public String getDepartureGeography() {
 		return departureGeography;
@@ -117,11 +125,17 @@ public class SubrouteModel {
 	public void setEcoImpact(float ecoImpact) {
 		this.ecoImpact = ecoImpact;
 	}
+	public float getComfortRating() {
+		return comfortRating;
+	}
+	public void setComfortRating(float comfortRating) {
+		this.comfortRating = comfortRating;
+	}
 	public String getContextInformation() {
 		return contextInformation;
 	}
 	public void setContextInformation(String contextInformation) {
 		this.contextInformation = contextInformation;
 	}
-		
+	
 }

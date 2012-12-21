@@ -1,8 +1,7 @@
-package com.jinengo.routengenerator.infrastructure;
+package com.jinengo.routengenerator.service.helper;
 
 import java.util.ArrayList;
 
-import com.jinengo.routengenerator.service.CSVReader;
 
 /**
  * Generate random start and end destination from csv list

@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 public class RouteModel {
 	private int userID;
 	private int ID;
-	private float timeSelected;
+	private DateTime timeSelected;
 	private String departureGeography = "";
 	private String departureAddress;
 	private DateTime departureTime;
@@ -49,10 +49,10 @@ public class RouteModel {
 	public void setID(int iD) {
 		ID = iD;
 	}
-	public float getTimeSelected() {
+	public DateTime getTimeSelected() {
 		return timeSelected;
 	}
-	public void setTimeSelected(float timeSelected) {
+	public void setTimeSelected(DateTime timeSelected) {
 		this.timeSelected = timeSelected;
 	}
 	public String getDepartureGeography() {

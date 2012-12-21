@@ -9,45 +9,22 @@ package com.jinengo.routengenerator.model;
 public class UserModel {
 	
 	private int ID;
-
-	//auswahl auto
 	private int incomeRange;
-
-	//verheiratet eher gepäck
 	private int familyStatus;
-	
-	//auswahl auto
 	private boolean ownsPEV;
-	
-	//auswahl auto
 	private boolean ownsGasCar;
-	
-	//von anderer Tabelle
 	private int carSharingMember;
-	
-	//dann eher ne zu Fuß Route mit dem Fahrrad fahren...
 	private boolean ownsEbike;
-	
-	//preis umsonst bus
 	private boolean publicTransportMember;
-	
-	//preis bahn ca 1/4
 	private int railMembership;
-	
-	// max distanace
 	private int maxDistanceToWalk;
 	private int maxDistanceToBike;
-	
-	// preferences
 	private float sustainabilityPreference;
 	private float comfortPreference;
 	private float costsPreference;
 	private float timePreference;
-	
-	// is active user
 	private boolean isActiveUser;
 	
-	// getter and setter
 	public int getID() {
 		return ID;
 	}

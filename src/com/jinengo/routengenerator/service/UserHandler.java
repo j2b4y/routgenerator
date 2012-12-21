@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.jinengo.routengenerator.model.UserModel;
+import com.jinengo.routengenerator.service.helper.QueryHandler;
 
 /**
  * Handle Database Request for User Details

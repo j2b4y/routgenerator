@@ -3,14 +3,9 @@ package com.jinengo.routengenerator.controller;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.w3c.dom.Document;
-
-import com.jinengo.routengenerator.api.ApiRequest;
-import com.jinengo.routengenerator.infrastructure.DestinationGenerator;
-import com.jinengo.routengenerator.infrastructure.RouteProcessor;
 import com.jinengo.routengenerator.model.UserModel;
-import com.jinengo.routengenerator.service.MSSQLConnectionHandler;
 import com.jinengo.routengenerator.service.UserHandler;
+import com.jinengo.routengenerator.service.helper.MSSQLConnectionHandler;
 
 /**
  * Main Controller to handle the data generation process
