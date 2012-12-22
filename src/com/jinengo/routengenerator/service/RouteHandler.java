@@ -57,14 +57,21 @@ private RouteDAO routeDAO;
 	
 	public void saveRoute(RouteModel routeModel, UserModel userModel) {
 		int routeId = getNewRouteId();
-		routeModel.setID(routeId);
-		try {
-			this.routeDAO.insertRoute(routeModel);
-			for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
-				this.routeDAO.insertSubRoute(subrouteModel);
+		if(routeModel != null) {
+			routeModel.setID(routeId);
+			try {
+				this.routeDAO.insertRoute(routeModel);
+				for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
+					subrouteModel.setRouteID(routeId);
+					subrouteModel.setID(getNewSubRouteId());
+					this.routeDAO.insertSubRoute(subrouteModel);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} else {
+			System.out.println("Route leer");
 		}
+		
 	}
 }

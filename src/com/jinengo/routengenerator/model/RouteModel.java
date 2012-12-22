@@ -35,6 +35,7 @@ public class RouteModel {
 	private float effectiveTimeDisadvantage;
 	private float costAdvantage;
 	private float costDisadvantage;
+	private float comfortRating;
 	private ArrayList<SubrouteModel> subroutes;
 	
 	public int getUserID() {
@@ -180,6 +181,12 @@ public class RouteModel {
 	}
 	public void setCostDisadvantage(float costDisadvantage) {
 		this.costDisadvantage = costDisadvantage;
+	}
+	public float getComfortRating() {
+		return comfortRating;
+	}
+	public void setComfortRating(float comfortRating) {
+		this.comfortRating = comfortRating;
 	}
 	public ArrayList<SubrouteModel> getSubroutes() {
 		return subroutes;

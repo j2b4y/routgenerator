@@ -124,6 +124,12 @@ public class RouteExpander {
 		return routeModel;
 	}
 	
+	/**
+	 * Check if subroute distance is longer than users max distance to walk / by bike
+	 *  
+	 * @param routeModel
+	 * @return boolean - if distance is to long
+	 */
 	private boolean distanceToLong(RouteModel routeModel){
 		boolean distanceToLong = false;
 		
@@ -144,6 +150,21 @@ public class RouteExpander {
 	}
 	
 	/**
+	 * Calc Comfort Rating over all subroutes
+	 * 
+	 * @param routeModel
+	 * @return comfortRating
+	 */
+	private float calcComfortRating(RouteModel routeModel) {
+		float comfortRating = 0;
+		for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
+			comfortRating += subrouteModel.getComfortRating();
+		}
+		
+		return comfortRating / routeModel.getSubroutes().size();
+	}
+	
+	/**
 	 * Expand each route from routelist with properties
 	 * 
 	 * @return routeList
@@ -156,8 +177,10 @@ public class RouteExpander {
 			
 			expRoute = expandRouteProperties(routeModel);
 			
-			// if subroute is foot/bike, check that distance is not longer
-			// than user preferences
+			// calc comfort Rating
+			routeModel.setComfortRating(calcComfortRating(expRoute));
+			
+			// if subroute is foot/bike, check that distance is not longer than user preferences
 			if(!distanceToLong(expRoute)) {
 				expandedRouteList.add(expRoute);
 			}

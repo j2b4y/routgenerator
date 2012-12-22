@@ -5,6 +5,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import com.jinengo.routengenerator.model.RouteModel;
 import com.jinengo.routengenerator.model.SubrouteModel;
 import com.jinengo.routengenerator.service.helper.MSSQLConnectionHandler;
@@ -75,14 +79,18 @@ public class RouteDAO {
 		Connection conn = MSSQLConnectionHandler.getInstance();
 		Statement query;
 		query = conn.createStatement();
-                
+          
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
+	    int periodInMinutes = new Period(routeModel.getDepartureTime(), routeModel.getDestinationTime()).toStandardMinutes().getMinutes();
+	    
+		
         String sql = "INSERT INTO " + this.tableRoute + " VALUES ("
             		+ routeModel.getID() + ", "
             		+ routeModel.getUserID() + ", "
-            		+ routeModel.getDepartureAddress() + ", "
-            		+ routeModel.getDestinationAddress() + ", "
-            		+ routeModel.getDepartureTime() + ", "
-            		+ routeModel.getDestinationTime() + ", "
+            		+ "'" + routeModel.getDepartureAddress() + "'" + ", "
+            		+ "'" + routeModel.getDestinationAddress() + "'"  + ", "
+            		+ "'" + routeModel.getDepartureTime().toString(fmt) + "'" + ", "
+            		+ "'" + routeModel.getDestinationTime().toString(fmt) + "'" + ", "
             		+ routeModel.getTotalDistance() + ", "
             		+ routeModel.getTotalCost() + ", "
             		+ routeModel.getTotalEmission() + ", "
@@ -95,10 +103,11 @@ public class RouteDAO {
             		+ 0 + ", "
             		+ 0 + ", "
             		+ 0 + ", "
-            		+ routeModel.getTotalTime() + ", "
-            		+ routeModel.getTotalTime() + ", "
+            		+ 0 + ", "
+            		+ periodInMinutes + ", "
+            		+ periodInMinutes
             		+ ");";
-                
+       
         query.executeUpdate(sql);
 		
 	}
@@ -108,12 +117,28 @@ public class RouteDAO {
 		Connection conn = MSSQLConnectionHandler.getInstance();
 		Statement query;
 		query = conn.createStatement();
-                
-        String sql = "INSERT INTO " + this.tableRoute + " VALUES ("
-        		+ subrouteModel.getID() + ", "
-        		+ ");";
-            
-         query.executeUpdate(sql);
+          
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
+	    int periodInMinutes = new Period(subrouteModel.getDepartureTime(), subrouteModel.getDestinationTime()).toStandardMinutes().getMinutes();
+	    
+		
+        String sql = "INSERT INTO " + this.tableSubRoute + "(Subroute_ID, Route_ID, Verkehrsmitteltyp_ID, Subroute_Start, Subroute_End, Subroute_Startzeit, Subroute_Endzeit, Subroute_Distanz, Subroute_Kosten, Subroute_CO2Emission, Subroute_Reisezeit, Subroute_Verkehrsmittel) VALUES ("
+            		+ subrouteModel.getID() + ", "
+            		+ subrouteModel.getRouteID() + ", "
+            		+ subrouteModel.getTransportationID() + ", "
+            		+ "'" + subrouteModel.getDepartureAddress() + "'" + ", "
+            		+ "'" + subrouteModel.getDestinationAddress() + "'"  + ", "
+            		+ "'" + subrouteModel.getDepartureTime().toString(fmt) + "'" + ", "
+            		+ "'" + subrouteModel.getDestinationTime().toString(fmt) + "'" + ", "
+            		+ subrouteModel.getDistance() + ", "
+            		+ subrouteModel.getCosts() + ", "
+            		+ subrouteModel.getEcoImpact() + ", "
+            		+ periodInMinutes + ", "
+            		+ "'" + subrouteModel.getTrasportationRaw() + "'"
+            		+ ");";
+        System.out.println(sql);
+       
+        query.executeUpdate(sql);
 		
 	}
 }

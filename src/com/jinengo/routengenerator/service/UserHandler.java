@@ -36,11 +36,11 @@ public class UserHandler {
 		try {
 			// generate list of user id's for calculating route
 			// max result count as param
-			ArrayList<String> userIds = this.userDao.getAllUserIds(2);
+			ArrayList<String> userIds = this.userDao.getAllUserIds(30);
 			
 			// generate list of active user id's to get more route for active user
 			// max result count as param
-			ArrayList<String> activeUserIds = this.userDao.getMostActiveUserIds(1);
+			ArrayList<String> activeUserIds = this.userDao.getMostActiveUserIds(100);
 			
 			for (String userId : userIds) {
 				isActive = activeUserIds.indexOf(userId) != -1;
