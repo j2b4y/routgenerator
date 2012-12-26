@@ -27,7 +27,7 @@ public class SubRouteExpander {
 	 * 
 	 * @param rawTransportationType
 	 * @param userModel
-	 * @return
+	 * @return subrouteModel
 	 */
 	private SubrouteModel generateTransportationID(String rawTransportationType, UserModel userModel, SubrouteModel subrouteModel) {
 		Random rnd = new Random();
@@ -49,8 +49,6 @@ public class SubRouteExpander {
 			}
 			break;		
 		case "Train":
-			// generate random train id (15-21)
-			int rndTrain = rnd.nextInt(7) + 15;
 			
 			// 50 percent propability that income range decides train
 			boolean incRange = rnd.nextInt(2) == 0;
@@ -68,7 +66,12 @@ public class SubRouteExpander {
 				if(userModel.getIncomeRange() > 3) {
 					subrouteModel.setTransportationID(20 + rndSubTrain); // IC or ICE
 				}
+			} else {
+				// generate random train id (15-21)
+				int rndTrain = rnd.nextInt(7) + 15;
+				subrouteModel.setTransportationID(rndTrain);
 			}
+			
 			subrouteModel.setTimeUsable(subrouteModel.getTime());
 			break;
 		
@@ -98,7 +101,7 @@ public class SubRouteExpander {
 				int electrCarId = 7;
 				subrouteModel.setTransportationID(electrCarId);
 			} else {
-				// if user did not own electric car, generate
+				// if user did not own electric car, generate car
 				subrouteModel = generateTransportationID("Car", userModel, subrouteModel);
 			}
 			break;

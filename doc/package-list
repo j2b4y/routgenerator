@@ -1,0 +1,7 @@
+com.jinengo.routengenerator
+com.jinengo.routengenerator.api
+com.jinengo.routengenerator.controller
+com.jinengo.routengenerator.infrastructure
+com.jinengo.routengenerator.model
+com.jinengo.routengenerator.service
+com.jinengo.routengenerator.service.helper

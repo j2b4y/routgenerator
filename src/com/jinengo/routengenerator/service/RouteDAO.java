@@ -14,11 +14,21 @@ import com.jinengo.routengenerator.model.SubrouteModel;
 import com.jinengo.routengenerator.service.helper.MSSQLConnectionHandler;
 import com.jinengo.routengenerator.service.helper.QueryHandler;
 
+/**
+ * Perform Database request to save route and get route data
+ * 
+ * @author lars & christopher
+ *
+ */
 public class RouteDAO {
 	private QueryHandler queryHandler;
 	private String tableRoute;
 	private String tableSubRoute;
 	
+	/**
+	 * Default constructor to init values
+	 * @param queryHandler
+	 */
 	public RouteDAO(QueryHandler queryHandler) {
 		this.queryHandler = queryHandler;
 		this.tableRoute = "A_SOURCE_Route";
@@ -26,8 +36,7 @@ public class RouteDAO {
 	}
 	
 	/**
-	 * get max route id from database
-	 * 
+	 * Get max route id from database
 	 * @return max route id
 	 * @throws SQLException
 	 */
@@ -44,7 +53,7 @@ public class RouteDAO {
 	}
 	
 	/**
-	 * get max subroute id from database
+	 * Get max subroute id from database
 	 * 
 	 * @return max subroute id
 	 * @throws SQLException
@@ -61,6 +70,12 @@ public class RouteDAO {
 		return maxId;
 	}
 	
+	/**
+	 * Get comfort rating for a given id
+	 * @param id - user Id
+	 * @return confortRating
+	 * @throws SQLException
+	 */
 	public float getComfortRating(int id) throws SQLException {
 		float comfRating = 0;
 		
@@ -74,6 +89,11 @@ public class RouteDAO {
 		return comfRating;
 	}
 	
+	/**
+	 * Insert route model into database
+	 * @param routeModel
+	 * @throws SQLException
+	 */
 	public void insertRoute(RouteModel routeModel) throws SQLException{
 		
 		Connection conn = MSSQLConnectionHandler.getInstance();
@@ -83,7 +103,6 @@ public class RouteDAO {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
 	    int periodInMinutes = new Period(routeModel.getDepartureTime(), routeModel.getDestinationTime()).toStandardMinutes().getMinutes();
 	    
-		
         String sql = "INSERT INTO " + this.tableRoute + " VALUES ("
             		+ routeModel.getID() + ", "
             		+ routeModel.getUserID() + ", "
@@ -112,6 +131,11 @@ public class RouteDAO {
 		
 	}
 	
+	/**
+	 * Insert SubroteModel into database
+	 * @param subrouteModel
+	 * @throws SQLException
+	 */
 	public void insertSubRoute(SubrouteModel subrouteModel) throws SQLException{
 		
 		Connection conn = MSSQLConnectionHandler.getInstance();
@@ -121,7 +145,6 @@ public class RouteDAO {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
 	    int periodInMinutes = new Period(subrouteModel.getDepartureTime(), subrouteModel.getDestinationTime()).toStandardMinutes().getMinutes();
 	    
-		
         String sql = "INSERT INTO " + this.tableSubRoute + "(Subroute_ID, Route_ID, Verkehrsmitteltyp_ID, Subroute_Start, Subroute_End, Subroute_Startzeit, Subroute_Endzeit, Subroute_Distanz, Subroute_Kosten, Subroute_CO2Emission, Subroute_Reisezeit, Subroute_Verkehrsmittel) VALUES ("
             		+ subrouteModel.getID() + ", "
             		+ subrouteModel.getRouteID() + ", "

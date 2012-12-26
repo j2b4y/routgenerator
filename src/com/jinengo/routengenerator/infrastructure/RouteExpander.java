@@ -16,21 +16,15 @@ import com.jinengo.routengenerator.model.UserModel;
  */
 public class RouteExpander {
 	private UserModel userModel;
-	private ArrayList<RouteModel> routeList;
-	private MinMaxModel minMaxModel;
 	
 	/**
 	 * Default Constructor
 	 * init values depending on current route list
 	 * 
 	 * @param userModel - the current user
-	 * @param routeList - the current routes
 	 */
-	public RouteExpander(UserModel userModel, ArrayList<RouteModel> routeList) {
+	public RouteExpander(UserModel userModel) {
 		this.userModel = userModel;
-		this.routeList = routeList;
-		this.minMaxModel = new MinMaxModel();
-		this.minMaxModel.initialize(routeList);
 	}
 	
 	/**
@@ -94,21 +88,21 @@ public class RouteExpander {
 	 * @param routeModel
 	 * @return routeModel - extended route model
 	 */
-	private RouteModel expandRouteProperties(RouteModel routeModel) {
-
+	private RouteModel expandRouteProperties(RouteModel routeModel, MinMaxModel minMaxModel) {
+		
 		routeModel.setUserID(this.userModel.getID());
 		
 		// calc passenger and luggage
 		routeModel.setLuggage(hasLuggage(this.userModel));		
-		routeModel.setPassengers(calcPersonCount(userModel));
+		routeModel.setPassengers(calcPersonCount(this.userModel));
 		
 		// set advantagaes
-		routeModel.setCostAdvantage(this.minMaxModel.getMaxCost() - routeModel.getTotalCost());
-		routeModel.setCostDisadvantage(routeModel.getTotalCost() - this.minMaxModel.getMinCost());
-		routeModel.setEcoImpactAdvantage(this.minMaxModel.getMaxEmission() - routeModel.getTotalEmission());
-		routeModel.setEcoImpactDisadvantage(routeModel.getTotalEmission() - this.minMaxModel.getMinEmission());
-		routeModel.setTimeAdvantage(this.minMaxModel.getMaxTraveltime() - routeModel.getTotalTime());
-		routeModel.setTimeDisadvantage(routeModel.getTotalTime() - this.minMaxModel.getMinTraveltime());
+		routeModel.setCostAdvantage(minMaxModel.getMaxCost() - routeModel.getTotalCost());
+		routeModel.setCostDisadvantage(routeModel.getTotalCost() - minMaxModel.getMinCost());
+		routeModel.setEcoImpactAdvantage(minMaxModel.getMaxEmission() - routeModel.getTotalEmission());
+		routeModel.setEcoImpactDisadvantage(routeModel.getTotalEmission() - minMaxModel.getMinEmission());
+		routeModel.setTimeAdvantage(minMaxModel.getMaxTraveltime() - routeModel.getTotalTime());
+		routeModel.setTimeDisadvantage(routeModel.getTotalTime() - minMaxModel.getMinTraveltime());
 		
 		// set departure and destination info
 		int lastSub = routeModel.getSubroutes().size() - 1;
@@ -120,6 +114,9 @@ public class RouteExpander {
 		
 		// expand subroute properties of current route
 		routeModel.setSubroutes(expandSubRoute(routeModel.getSubroutes(), this.userModel));
+		
+		// calc comfort Rating (depending on subroutes)
+		routeModel.setComfortRating(calcComfortRating(routeModel));
 		
 		return routeModel;
 	}
@@ -169,16 +166,15 @@ public class RouteExpander {
 	 * 
 	 * @return routeList
 	 */
-	public ArrayList<RouteModel> expandProperties() {
+	public ArrayList<RouteModel> expandProperties(ArrayList<RouteModel> routeList) {
 		ArrayList<RouteModel> expandedRouteList = new ArrayList<RouteModel>(); 
 		RouteModel expRoute;
 		
-		for (RouteModel routeModel : this.routeList) {
-			
-			expRoute = expandRouteProperties(routeModel);
-			
-			// calc comfort Rating
-			routeModel.setComfortRating(calcComfortRating(expRoute));
+		MinMaxModel minMaxModel = new MinMaxModel(routeList);		
+		
+		for (RouteModel routeModel : routeList) {
+			// expand properties
+			expRoute = expandRouteProperties(routeModel, minMaxModel);
 			
 			// if subroute is foot/bike, check that distance is not longer than user preferences
 			if(!distanceToLong(expRoute)) {

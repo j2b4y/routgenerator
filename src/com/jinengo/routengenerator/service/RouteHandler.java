@@ -9,6 +9,8 @@ import com.jinengo.routengenerator.service.helper.QueryHandler;
 
 /**
  * 
+ * Handles all route requests to database
+ * Save the selected route to database and get max ids from database
  * 
  * @author lars & christopher
  *
@@ -18,13 +20,17 @@ public class RouteHandler {
 private RouteDAO routeDAO;
 	
 	/**
-	 * default constructor
-	 * init user data access object and query handler
+	 * Default constructor
+	 * Init user data access object and query handler
 	 */
 	public RouteHandler() {
 		this.routeDAO = new RouteDAO(new QueryHandler());
 	}
 	
+	/**
+	 * Generate new route id
+	 * @return id - new route id
+	 */
 	private int getNewRouteId() {
 		int routeId = 0;
 		try {
@@ -35,6 +41,10 @@ private RouteDAO routeDAO;
 		return routeId;
 	}
 	
+	/**
+	 * Generate new sub route id
+	 * @return id - new sub route id
+	 */
 	private int getNewSubRouteId() {
 		int routeId = 0;
 		try {
@@ -45,6 +55,11 @@ private RouteDAO routeDAO;
 		return routeId;
 	}
 	
+	/**
+	 * Get comfort rating
+	 * @param id
+	 * @return comfRating
+	 */
 	public float getComfortRating(int id) {
 		float comfRating = 0;
 		try {
@@ -55,6 +70,11 @@ private RouteDAO routeDAO;
 		return comfRating;
 	}
 	
+	/**
+	 * Save route to Database
+	 * @param routeModel
+	 * @param userModel
+	 */
 	public void saveRoute(RouteModel routeModel, UserModel userModel) {
 		int routeId = getNewRouteId();
 		if(routeModel != null) {

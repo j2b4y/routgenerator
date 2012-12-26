@@ -40,8 +40,8 @@ public class RouteController {
 		ArrayList<RouteModel> routeList = routeProcessor.processXmlDocument(doc);
 		
 		// expand properties of each route with properties specific to the user
-		RouteExpander routeExpander = new RouteExpander(userModel, routeList);
-		routeList = routeExpander.expandProperties();
+		RouteExpander routeExpander = new RouteExpander(userModel);
+		routeList = routeExpander.expandProperties(routeList);
 		
 		// decide wich route is fitting most to user model
 		RouteDecisionMaker routeDecisionMaker = new RouteDecisionMaker(userModel);

@@ -26,7 +26,6 @@ public class UserHandler {
 	/**
 	 * Query User details for every given ID and return them as list
 	 * 
-	 * @param userIds - List of user ids
 	 * @return list with user details
 	 */
 	public ArrayList<UserModel> generateUserList() {
