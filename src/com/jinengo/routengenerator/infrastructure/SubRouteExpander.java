@@ -97,20 +97,34 @@ public class SubRouteExpander {
 			break;
 			
 		case "ElectricCar":
-			if(userModel.isOwnsPEV()) {
-				int electrCarId = 7;
-				subrouteModel.setTransportationID(electrCarId);
-			} else {
-				// if user did not own electric car, generate car
-				subrouteModel = generateTransportationID("Car", userModel, subrouteModel);
-			}
+			int electrCarId = 7;
+			subrouteModel.setTransportationID(electrCarId);
+			
 			break;
 			
 		case "Bus":
 			int busId = 12;
-			int busVariant = rnd.nextInt(3) + busId;
-			subrouteModel.setTransportationID(busVariant);
+			int omnibusId = 13;
+			
+			// every 4th time take omnibus
+			int busVariant = rnd.nextInt(4);
+			if ( busVariant > 0 ) {
+				subrouteModel.setTransportationID(busId);
+			} else {
+				subrouteModel.setTransportationID(omnibusId);
+			}
+			
+			break;
+			
+		case "Tram":
+			int tramId = 14;
+			subrouteModel.setTransportationID(tramId);
+			
+			break;	
+			
 		default:
+			System.out.println("unbekanntes Verkehrsmittel");
+			subrouteModel.setTransportationID(-1);
 			break;
 		}
 		

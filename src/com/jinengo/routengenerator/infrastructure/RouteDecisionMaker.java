@@ -28,15 +28,13 @@ public class RouteDecisionMaker {
 	 * Return the most comfortable route
 	 * 
 	 * @param routeList
-	 * @return RouteModel - confortable route
+	 * @return RouteModel - comfortable route
 	 */
 	private RouteModel getMostComfortableRoute(ArrayList<RouteModel> routeList) {
 		RouteModel resRoute = null;
 		for (RouteModel routeModel : routeList) {
 			if (resRoute != null) {
-				// TODO: check if comp works correctly
-				// TODO: whats the difference between flaot and double
-				if (Float.compare(routeModel.getComfortRating(), resRoute.getComfortRating()) > 0) {
+				if (routeModel.getComfortRating() > resRoute.getComfortRating()) {
 					resRoute = routeModel;
 				}
 			} else {
@@ -141,10 +139,10 @@ public class RouteDecisionMaker {
 		if (routeList.size() > 0) {		
 			int prblty = rnd.nextInt(4);
 			// With highest possibility choose the most fitting route
-			if (prblty != 0) {
+			if (prblty > 0) {
 				return getFittingRoute(routeList, this.userModel);
 			} else {
-				// But sometimes select random route
+				// But every 4th time select random route
 				int rndPos = rnd.nextInt(routeList.size());
 				return routeList.get(rndPos);
 			}

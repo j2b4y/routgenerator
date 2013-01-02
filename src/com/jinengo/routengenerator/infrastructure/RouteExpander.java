@@ -82,13 +82,58 @@ public class RouteExpander {
 		return subRouteExpander.expandProperties(subroutes);
 	}
 	
+	private float calcTotalCosts(RouteModel routeModel) {
+		float totalCosts = 0;
+		for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
+			totalCosts += subrouteModel.getCosts();
+		}
+		return totalCosts;
+	}
+	
+	private RouteModel setTrainCosts(RouteModel routeModel) {
+		ArrayList<SubrouteModel> subrouteList = new ArrayList<SubrouteModel>();
+		
+		for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
+			if ( subrouteModel.getTrasportationRaw().equalsIgnoreCase("Train") ) {
+			
+				switch (this.userModel.getRailMembership()) {
+					// BahnCard 25 (2. Klasse) or BahnCard 50 (1. Klasse)
+					case 2:
+					case 6:
+						subrouteModel.setCosts((float) (subrouteModel.getCosts() * 0.75));
+						break;
+					
+					// BahnCard 50 (2. Klasse)
+					case 3:
+						subrouteModel.setCosts((float) (subrouteModel.getCosts() * 0.50));
+						break;
+					
+					// Bahn Card 100
+					case 4:
+					case 7:
+						subrouteModel.setCosts(0);
+						break;
+	
+					default:
+						break;
+				}
+			}
+			subrouteList.add(subrouteModel);
+		}
+		routeModel.setSubroutes(subrouteList);
+		
+		// calculate new total costs
+		routeModel.setTotalCost(calcTotalCosts(routeModel));
+		return routeModel;
+	}
+	
 	/**
 	 * expand the route model with informations
 	 * 
 	 * @param routeModel
 	 * @return routeModel - extended route model
 	 */
-	private RouteModel expandRouteProperties(RouteModel routeModel, MinMaxModel minMaxModel) {
+	private RouteModel expandRouteProperties(RouteModel routeModel) {
 		
 		routeModel.setUserID(this.userModel.getID());
 		
@@ -96,21 +141,16 @@ public class RouteExpander {
 		routeModel.setLuggage(hasLuggage(this.userModel));		
 		routeModel.setPassengers(calcPersonCount(this.userModel));
 		
-		// set advantagaes
-		routeModel.setCostAdvantage(minMaxModel.getMaxCost() - routeModel.getTotalCost());
-		routeModel.setCostDisadvantage(routeModel.getTotalCost() - minMaxModel.getMinCost());
-		routeModel.setEcoImpactAdvantage(minMaxModel.getMaxEmission() - routeModel.getTotalEmission());
-		routeModel.setEcoImpactDisadvantage(routeModel.getTotalEmission() - minMaxModel.getMinEmission());
-		routeModel.setTimeAdvantage(minMaxModel.getMaxTraveltime() - routeModel.getTotalTime());
-		routeModel.setTimeDisadvantage(routeModel.getTotalTime() - minMaxModel.getMinTraveltime());
-		
 		// set departure and destination info
-		int lastSub = routeModel.getSubroutes().size() - 1;
+		routeModel.setTimeSelected(routeModel.getSubroutes().get(0).getDepartureTime());
+		
 		routeModel.setDepartureAddress(routeModel.getSubroutes().get(0).getDepartureAddress());
 		routeModel.setDepartureTime(routeModel.getSubroutes().get(0).getDepartureTime());
+		
+		int lastSub = routeModel.getSubroutes().size() - 1;
 		routeModel.setDestinationAddress(routeModel.getSubroutes().get(lastSub).getDestinationAddress());
 		routeModel.setDestinationTime(routeModel.getSubroutes().get(lastSub).getDestinationTime());
-		routeModel.setTimeSelected(routeModel.getSubroutes().get(0).getDepartureTime());
+		
 		
 		// expand subroute properties of current route
 		routeModel.setSubroutes(expandSubRoute(routeModel.getSubroutes(), this.userModel));
@@ -118,32 +158,11 @@ public class RouteExpander {
 		// calc comfort Rating (depending on subroutes)
 		routeModel.setComfortRating(calcComfortRating(routeModel));
 		
+		// reset total costs and subroute cost if user owns "bahn card"
+		routeModel = setTrainCosts(routeModel);
+		
+		// set advantagaes
 		return routeModel;
-	}
-	
-	/**
-	 * Check if subroute distance is longer than users max distance to walk / by bike
-	 *  
-	 * @param routeModel
-	 * @return boolean - if distance is to long
-	 */
-	private boolean distanceToLong(RouteModel routeModel){
-		boolean distanceToLong = false;
-		
-		for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
-			if(subrouteModel.getTransportationID() == 1) {
-				if (this.userModel.getMaxDistanceToWalk() < (subrouteModel.getDistance() / 1000)) {
-					return true;
-				}
-			}
-			if(subrouteModel.getTransportationID() == 2 || subrouteModel.getTransportationID() == 3) {
-				if (this.userModel.getMaxDistanceToBike() < (subrouteModel.getDistance() / 1000)) {
-					return true;
-				}
-			}
-		}
-		
-		return distanceToLong;
 	}
 	
 	/**
@@ -161,28 +180,39 @@ public class RouteExpander {
 		return comfortRating / routeModel.getSubroutes().size();
 	}
 	
+	private RouteModel calculateAdvantages(MinMaxModel minMaxModel, RouteModel routeModel) {
+		
+		routeModel.setCostAdvantage(minMaxModel.getMaxCost() - routeModel.getTotalCost());
+		routeModel.setCostDisadvantage(routeModel.getTotalCost() - minMaxModel.getMinCost());
+		routeModel.setEcoImpactAdvantage(minMaxModel.getMaxEmission() - routeModel.getTotalEmission());
+		routeModel.setEcoImpactDisadvantage(routeModel.getTotalEmission() - minMaxModel.getMinEmission());
+		routeModel.setTimeAdvantage(minMaxModel.getMaxTraveltime() - routeModel.getTotalTime());
+		routeModel.setTimeDisadvantage(routeModel.getTotalTime() - minMaxModel.getMinTraveltime());	
+		
+		return routeModel;
+	}
+	
 	/**
 	 * Expand each route from routelist with properties
 	 * 
 	 * @return routeList
 	 */
 	public ArrayList<RouteModel> expandProperties(ArrayList<RouteModel> routeList) {
-		ArrayList<RouteModel> expandedRouteList = new ArrayList<RouteModel>(); 
-		RouteModel expRoute;
-		
-		MinMaxModel minMaxModel = new MinMaxModel(routeList);		
+		RouteValidator validator = new RouteValidator(this.userModel);
+		ArrayList<RouteModel> expandedRouteList = new ArrayList<RouteModel>(); 		
 		
 		for (RouteModel routeModel : routeList) {
 			// expand properties
-			expRoute = expandRouteProperties(routeModel, minMaxModel);
-			
-			// if subroute is foot/bike, check that distance is not longer than user preferences
-			if(!distanceToLong(expRoute)) {
-				expandedRouteList.add(expRoute);
-			}
-			
+			expandedRouteList.add(expandRouteProperties(routeModel));		
 		}
 		
-		return expandedRouteList;
+		for (int i = 0; i < expandedRouteList.size(); i++) {
+			// calculate min and max values depending on a given routelist
+			MinMaxModel minMaxModel = new MinMaxModel(routeList);
+			expandedRouteList.set(i, calculateAdvantages(minMaxModel, expandedRouteList.get(i)));
+		}
+
+		// validate each route, if it fits to user details
+		return validator.getValidatedRoutelist(expandedRouteList);
 	}
 }
