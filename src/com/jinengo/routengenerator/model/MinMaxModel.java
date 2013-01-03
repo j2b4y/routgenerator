@@ -21,7 +21,7 @@ public class MinMaxModel {
 	private float minEffectiveTime = Float.MAX_VALUE;
 	
 	/**
-	 * Init values
+	 * Init min max values
 	 * 
 	 * @param routeList
 	 */

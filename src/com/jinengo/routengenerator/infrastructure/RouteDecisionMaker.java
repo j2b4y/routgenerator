@@ -48,9 +48,11 @@ public class RouteDecisionMaker {
 			
 			// every 4th time take route depending on luggage and passengers
 			if(prblty == 0) {
-				if(routeModel.isLuggage() && routeModel.getPassengers() <= 4 && isKind(routeModel, "Car")) {
+				// if person have luggage and there are less than 5 people, take the car
+				if(routeModel.isLuggage() && routeModel.getPassengers() < 5 && isKind(routeModel, "Car")) {
 					return routeModel;
 				}
+				// take train if more than 4 person travel
 				if(routeModel.getPassengers() > 4 && isKind(routeModel, "Train")) {
 					return routeModel;
 				}

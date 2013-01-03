@@ -82,6 +82,12 @@ public class RouteExpander {
 		return subRouteExpander.expandProperties(subroutes);
 	}
 	
+	/**
+	 * calc total costs if changed due to bahn card user
+	 * 
+	 * @param routeModel
+	 * @return routeModel - with total costs
+	 */
 	private float calcTotalCosts(RouteModel routeModel) {
 		float totalCosts = 0;
 		for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
@@ -90,6 +96,12 @@ public class RouteExpander {
 		return totalCosts;
 	}
 	
+	/**
+	 * Set train cost depending on bahn card
+	 * 
+	 * @param routeModel
+	 * @return routeModel - with resetted costs
+	 */
 	private RouteModel setTrainCosts(RouteModel routeModel) {
 		ArrayList<SubrouteModel> subrouteList = new ArrayList<SubrouteModel>();
 		
