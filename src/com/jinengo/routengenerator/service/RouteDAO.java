@@ -24,17 +24,19 @@ public class RouteDAO {
 	private QueryHandler queryHandler;
 	private String tableRoute;
 	private String tableSubRoute;
+	private int daysInPast = 0;
 	
 	/**
 	 * Default constructor to init values
 	 * @param queryHandler
 	 */
-	public RouteDAO(QueryHandler queryHandler) {
+	public RouteDAO(QueryHandler queryHandler, int daysInPast) {
+		this.daysInPast = daysInPast;
 		this.queryHandler = queryHandler;
 		this.tableRoute = "A_SOURCE_Route";
 		this.tableSubRoute = "A_SOURCE_Subroute";
 	}
-	
+		
 	/**
 	 * Get max route id from database
 	 * @return max route id
@@ -109,8 +111,8 @@ public class RouteDAO {
             		+ routeModel.getUserID() + ", "
             		+ "'" + routeModel.getDepartureAddress() + "', "
             		+ "'" + routeModel.getDestinationAddress() + "', "
-            		+ "'" + routeModel.getDepartureTime().toString(fmt) + "', "
-            		+ "'" + routeModel.getDestinationTime().toString(fmt) + "', "
+            		+ "'" + routeModel.getDepartureTime().minusDays(this.daysInPast).toString(fmt) + "', "
+            		+ "'" + routeModel.getDestinationTime().minusDays(this.daysInPast).toString(fmt) + "', "
             		+ routeModel.getTotalDistance() + ", "
             		+ routeModel.getTotalCost() + ", "
             		+ routeModel.getTotalEmission() + ", "
@@ -153,8 +155,8 @@ public class RouteDAO {
             		+ subrouteModel.getTransportationID() + ", "
             		+ "'" + subrouteModel.getDepartureAddress() + "'" + ", "
             		+ "'" + subrouteModel.getDestinationAddress() + "'"  + ", "
-            		+ "'" + subrouteModel.getDepartureTime().toString(fmt) + "'" + ", "
-            		+ "'" + subrouteModel.getDestinationTime().toString(fmt) + "'" + ", "
+            		+ "'" + subrouteModel.getDepartureTime().minusDays(this.daysInPast).toString(fmt) + "'" + ", "
+            		+ "'" + subrouteModel.getDestinationTime().minusDays(this.daysInPast).toString(fmt) + "'" + ", "
             		+ subrouteModel.getDistance() + ", "
             		+ subrouteModel.getCosts() + ", "
             		+ subrouteModel.getEcoImpact() + ", "

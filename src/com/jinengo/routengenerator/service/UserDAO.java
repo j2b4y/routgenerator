@@ -146,6 +146,7 @@ public class UserDAO {
 			userModel.setMaxDistanceToWalk(res.getInt("maxDistanceToWalk"));
 			userModel.setMaxDistanceToBike(res.getInt("maxDistanceToBike"));
 			userModel.setActiveUser(isActive);
+			System.out.println("daten generiert für user id: " + userModel.getID());
 		} else {
 			System.out.println("Keine User Daten gefunden für User: " + userId);
 		}

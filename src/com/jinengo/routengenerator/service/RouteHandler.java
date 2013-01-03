@@ -1,6 +1,7 @@
 package com.jinengo.routengenerator.service;
 
 import java.sql.SQLException;
+import java.util.Random;
 
 import com.jinengo.routengenerator.model.RouteModel;
 import com.jinengo.routengenerator.model.SubrouteModel;
@@ -24,7 +25,17 @@ private RouteDAO routeDAO;
 	 * Init user data access object and query handler
 	 */
 	public RouteHandler() {
-		this.routeDAO = new RouteDAO(new QueryHandler());
+		// true to generate routes in the past, false to generate routes for the current day
+		boolean generatePastData = true;
+		int daysInThePast = generatePastData ? generateRandomDayInPast() : 0;
+		this.routeDAO = new RouteDAO(new QueryHandler(), daysInThePast);
+	}
+	
+	private int generateRandomDayInPast() {
+		Random rnd = new Random();
+		// two generate two data somewhere in between the last years
+		int daysInThePast = 2 * 365;
+		return rnd.nextInt(daysInThePast + 1);
 	}
 	
 	/**

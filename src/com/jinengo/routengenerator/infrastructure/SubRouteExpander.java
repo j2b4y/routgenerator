@@ -143,7 +143,6 @@ public class SubRouteExpander {
 		
 		subrouteModel.setUserID(this.userModel.getID());
 		subrouteModel = generateTransportationID(subrouteModel.getTrasportationRaw(), this.userModel, subrouteModel);
-		// TODO: contextInformation;
 		return subrouteModel;
 	}
 	

@@ -137,10 +137,6 @@ public class RouteExpander {
 		
 		routeModel.setUserID(this.userModel.getID());
 		
-		// calc passenger and luggage
-		routeModel.setLuggage(hasLuggage(this.userModel));		
-		routeModel.setPassengers(calcPersonCount(this.userModel));
-		
 		// set departure and destination info
 		routeModel.setTimeSelected(routeModel.getSubroutes().get(0).getDepartureTime());
 		
@@ -236,8 +232,14 @@ public class RouteExpander {
 		RouteValidator validator = new RouteValidator(this.userModel);
 		ArrayList<RouteModel> expandedRouteList = new ArrayList<RouteModel>(); 		
 		
-		// expand properties
+		// calc passengers and luggage
+		int passengers = calcPersonCount(this.userModel);
+		boolean luggage = hasLuggage(this.userModel);		
+		
+		// expand route properties
 		for (RouteModel routeModel : routeList) {
+			routeModel.setLuggage(luggage);		
+			routeModel.setPassengers(passengers);
 			expandedRouteList.add(expandRouteProperties(routeModel));		
 		}
 		

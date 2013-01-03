@@ -31,15 +31,15 @@ public class UserHandler {
 	public ArrayList<UserModel> generateUserList() {
 		ArrayList<UserModel> userList = new ArrayList<UserModel>();
 		boolean isActive = false;
+		int activeUser = 30;
+		int maxUser = 100;
 		
 		try {
 			// generate list of user id's for calculating route
-			// max result count as param
-			ArrayList<String> userIds = this.userDao.getAllUserIds(30);
+			ArrayList<String> userIds = this.userDao.getAllUserIds(maxUser);
 			
 			// generate list of active user id's to get more route for active user
-			// max result count as param
-			ArrayList<String> activeUserIds = this.userDao.getMostActiveUserIds(100);
+			ArrayList<String> activeUserIds = this.userDao.getMostActiveUserIds(activeUser);
 			
 			for (String userId : userIds) {
 				isActive = activeUserIds.indexOf(userId) != -1;

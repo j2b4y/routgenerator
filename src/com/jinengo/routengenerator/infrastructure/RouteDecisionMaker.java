@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.jinengo.routengenerator.model.RouteModel;
+import com.jinengo.routengenerator.model.SubrouteModel;
 import com.jinengo.routengenerator.model.UserModel;
 
 /**
@@ -24,6 +25,10 @@ public class RouteDecisionMaker {
 		this.userModel = userModel;
 	}
 	
+	/**
+	 * User Preferences
+	 *
+	 */
 	public enum RoutePreference {
 		COMF, SUST, FAST, CHEAP
 	}
@@ -36,7 +41,22 @@ public class RouteDecisionMaker {
 	 */
 	private RouteModel getMostPreferredRoute(ArrayList<RouteModel> routeList, RoutePreference pref) {
 		RouteModel resRoute = null;
+		Random rnd = new Random();
+		int prblty = rnd.nextInt(4);
+		
 		for (RouteModel routeModel : routeList) {
+			
+			// every 4th time take route depending on luggage and passengers
+			if(prblty == 0) {
+				if(routeModel.isLuggage() && routeModel.getPassengers() <= 4 && isKind(routeModel, "Car")) {
+					return routeModel;
+				}
+				if(routeModel.getPassengers() > 4 && isKind(routeModel, "Train")) {
+					return routeModel;
+				}
+			}
+			
+			// get route depending on user preferences
 			if (resRoute != null) {
 				switch (pref) {
 				case COMF:
@@ -54,7 +74,6 @@ public class RouteDecisionMaker {
 						resRoute = routeModel;
 					}
 					break;
-				
 				case CHEAP:
 					if (routeModel.getCostAdvantage() > resRoute.getCostAdvantage()) {
 						resRoute = routeModel;
@@ -71,8 +90,21 @@ public class RouteDecisionMaker {
 		return resRoute;
 	}
 
-
-
+	/**
+	 * return true if route is kind of a given transportation name e.g. train
+	 * 
+	 * @param routeModel
+	 * @param kind
+	 * @return boolean - is kind of transportation
+	 */
+	boolean isKind(RouteModel routeModel, String kind) {
+		for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
+			if (subrouteModel.getTrasportationRaw().contains(kind)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Calculate which route type is preferred most
@@ -108,11 +140,11 @@ public class RouteDecisionMaker {
 		Random rnd = new Random();
 		if (routeList.size() > 0) {		
 			int prblty = rnd.nextInt(4);
-			// With highest possibility choose the most fitting route
+			// with highest possibility choose the most fitting route
 			if (prblty > 0) {
 				return getFittingRoute(routeList, this.userModel);
 			} else {
-				// But every 4th time select random route
+				// every 4th time select random route
 				int rndPos = rnd.nextInt(routeList.size());
 				return routeList.get(rndPos);
 			}
