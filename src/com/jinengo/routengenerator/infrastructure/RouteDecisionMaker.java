@@ -23,20 +23,47 @@ public class RouteDecisionMaker {
 	public RouteDecisionMaker(UserModel userModel) {
 		this.userModel = userModel;
 	}
+	
+	public enum RoutePreference {
+		COMF, SUST, FAST, CHEAP
+	}
 
 	/**
-	 * Return the most comfortable route
+	 * Return the most preferred route
 	 * 
 	 * @param routeList
 	 * @return RouteModel - comfortable route
 	 */
-	private RouteModel getMostComfortableRoute(ArrayList<RouteModel> routeList) {
+	private RouteModel getMostPreferredRoute(ArrayList<RouteModel> routeList, RoutePreference pref) {
 		RouteModel resRoute = null;
 		for (RouteModel routeModel : routeList) {
 			if (resRoute != null) {
-				if (routeModel.getComfortRating() > resRoute.getComfortRating()) {
-					resRoute = routeModel;
+				switch (pref) {
+				case COMF:
+					if (routeModel.getComfortRating() > resRoute.getComfortRating()) {
+						resRoute = routeModel;
+					}
+					break;
+				case SUST:
+					if (routeModel.getEcoImpactAdvantage() > resRoute.getEcoImpactAdvantage()) {
+						resRoute = routeModel;
+					}
+					break;
+				case FAST:
+					if (routeModel.getTimeAdvantage() > resRoute.getTimeAdvantage()) {
+						resRoute = routeModel;
+					}
+					break;
+				
+				case CHEAP:
+					if (routeModel.getCostAdvantage() > resRoute.getCostAdvantage()) {
+						resRoute = routeModel;
+					}
+					break;
+				default:
+					break;
 				}
+				
 			} else {
 				resRoute = routeModel;
 			}
@@ -44,72 +71,15 @@ public class RouteDecisionMaker {
 		return resRoute;
 	}
 
-	/**
-	 * Return the most sustainable route
-	 * 
-	 * @param routeList
-	 * @return RouteModel - sustainable route
-	 */
-	private RouteModel getMostSustainableRoute(ArrayList<RouteModel> routeList) {
-		RouteModel resRoute = null;
-		for (RouteModel routeModel : routeList) {
-			if (resRoute != null) {
-				if (routeModel.getEcoImpactAdvantage() > resRoute.getEcoImpactAdvantage()) {
-					resRoute = routeModel;
-				}
-			} else {
-				resRoute = routeModel;
-			}
-		}
-		return resRoute;
-	}
+
+
 
 	/**
-	 * Return the fastest route
-	 * 
-	 * @param routeList
-	 * @return RouteModel - fastest route
-	 */
-	private RouteModel getFastestRoute(ArrayList<RouteModel> routeList) {
-		RouteModel resRoute = null;
-		for (RouteModel routeModel : routeList) {
-			if (resRoute != null) {
-				if (routeModel.getTimeAdvantage() > resRoute.getTimeAdvantage()) {
-					resRoute = routeModel;
-				}
-			} else {
-				resRoute = routeModel;
-			}
-		}
-		return resRoute;
-	}
-
-	/**
-	 * Return the cheapest route
-	 * 
-	 * @param routeList
-	 * @return RouteModel - cheapest route
-	 */
-	private RouteModel getCheapestRoute(ArrayList<RouteModel> routeList) {
-		RouteModel resRoute = null;
-		for (RouteModel routeModel : routeList) {
-			if (resRoute != null) {
-				if (routeModel.getCostAdvantage() > resRoute.getCostAdvantage()) {
-					resRoute = routeModel;
-				}
-			} else {
-				resRoute = routeModel;
-			}
-		}
-		return resRoute;
-	}
-
-	/**
-	 * Calculate which route type is prefered most
+	 * Calculate which route type is preferred most
 	 * 
 	 * @param routeList
 	 * @param userModel
-	 * @return RouteModel - most prefered route
+	 * @return RouteModel - most preferred route
 	 */
 	private RouteModel getFittingRoute(ArrayList<RouteModel> routeList, UserModel userModel) {
 		float comf = userModel.getComfortPreference();
@@ -118,13 +88,13 @@ public class RouteDecisionMaker {
 		float cost = userModel.getCostsPreference();
 
 		if (comf > sust && comf > time && comf > cost) {
-			return getMostComfortableRoute(routeList);
+			return getMostPreferredRoute(routeList, RoutePreference.COMF);
 		} else if (sust > comf && sust > time && sust > cost) {
-			return getMostSustainableRoute(routeList);
+			return getMostPreferredRoute(routeList, RoutePreference.SUST);
 		} else if (time > comf && time > sust && time > cost) {
-			return getFastestRoute(routeList);
+			return getMostPreferredRoute(routeList, RoutePreference.FAST);
 		} else {
-			return getCheapestRoute(routeList);
+			return getMostPreferredRoute(routeList, RoutePreference.CHEAP);
 		}
 	}
 

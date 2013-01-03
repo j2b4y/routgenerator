@@ -155,18 +155,19 @@ public class RouteExpander {
 		// expand subroute properties of current route
 		routeModel.setSubroutes(expandSubRoute(routeModel.getSubroutes(), this.userModel));
 		
-		// calc comfort Rating (depending on subroutes)
+		// calc comfort rating and effective time (depending on subroutes)
 		routeModel.setComfortRating(calcComfortRating(routeModel));
+		routeModel.setEffectiveTime(calcEffectiveTime(routeModel));
 		
 		// reset total costs and subroute cost if user owns "bahn card"
 		routeModel = setTrainCosts(routeModel);
 		
-		// set advantagaes
+		// set advantages
 		return routeModel;
 	}
 	
 	/**
-	 * Calc Comfort Rating over all subroutes
+	 * Calc comfort rating over all subroutes
 	 * 
 	 * @param routeModel
 	 * @return comfortRating
@@ -180,14 +181,48 @@ public class RouteExpander {
 		return comfortRating / routeModel.getSubroutes().size();
 	}
 	
-	private RouteModel calculateAdvantages(MinMaxModel minMaxModel, RouteModel routeModel) {
+	/**
+	 * Calc effective tme over all subroutes
+	 * 
+	 * @param routeModel
+	 * @return effectiveTime
+	 */
+	private float calcEffectiveTime(RouteModel routeModel) {
+		float effectiveTime = 0;
+		for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
+			effectiveTime += subrouteModel.getTimeUsable();
+		}
 		
+		return effectiveTime;
+	}
+	
+	/**
+	 * Calculate advantages and disadvantages depending in min/max values
+	 * 
+	 * @param minMaxModel
+	 * @param routeModel
+	 * @return extended routeModel
+	 */
+	private RouteModel calculateAdvantages(MinMaxModel minMaxModel, RouteModel routeModel) {
+		// Cost
 		routeModel.setCostAdvantage(minMaxModel.getMaxCost() - routeModel.getTotalCost());
 		routeModel.setCostDisadvantage(routeModel.getTotalCost() - minMaxModel.getMinCost());
+		
+		// Eco Impact
 		routeModel.setEcoImpactAdvantage(minMaxModel.getMaxEmission() - routeModel.getTotalEmission());
 		routeModel.setEcoImpactDisadvantage(routeModel.getTotalEmission() - minMaxModel.getMinEmission());
+		
+		// Travel Time
 		routeModel.setTimeAdvantage(minMaxModel.getMaxTraveltime() - routeModel.getTotalTime());
 		routeModel.setTimeDisadvantage(routeModel.getTotalTime() - minMaxModel.getMinTraveltime());	
+		
+		// Comfort
+		routeModel.setComfortRatingAdvantage(routeModel.getComfortRating() - minMaxModel.getMinComfortRating());
+		routeModel.setComfortRatingDisadvantage(minMaxModel.getMaxComfortRating() - routeModel.getComfortRating());	
+		
+		// Effective Time
+		routeModel.setEffectiveTimeAdvantage(routeModel.getEffectiveTime() - minMaxModel.getMinEffectiveTime());
+		routeModel.setEffectiveTimeDisadvantage(minMaxModel.getMaxEffectiveTime() - routeModel.getEffectiveTime());	
 		
 		return routeModel;
 	}
@@ -201,18 +236,20 @@ public class RouteExpander {
 		RouteValidator validator = new RouteValidator(this.userModel);
 		ArrayList<RouteModel> expandedRouteList = new ArrayList<RouteModel>(); 		
 		
+		// expand properties
 		for (RouteModel routeModel : routeList) {
-			// expand properties
 			expandedRouteList.add(expandRouteProperties(routeModel));		
 		}
 		
+		// validate each route, if it fits to user details
+		expandedRouteList = validator.getValidatedRoutelist(expandedRouteList);
+		
+		// calculate advantages and disadvantages
+		MinMaxModel minMaxModel = new MinMaxModel(expandedRouteList);
 		for (int i = 0; i < expandedRouteList.size(); i++) {
-			// calculate min and max values depending on a given routelist
-			MinMaxModel minMaxModel = new MinMaxModel(routeList);
 			expandedRouteList.set(i, calculateAdvantages(minMaxModel, expandedRouteList.get(i)));
 		}
 
-		// validate each route, if it fits to user details
-		return validator.getValidatedRoutelist(expandedRouteList);
+		return expandedRouteList;
 	}
 }

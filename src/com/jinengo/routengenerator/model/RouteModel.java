@@ -25,16 +25,19 @@ public class RouteModel {
 	private float totalEmission;
 	private float totalCost;
 	private int needID = 1;
-	private boolean luggage;
+	private boolean luggage = false;
 	private int passengers;
 	private float ecoImpactAdvantage;
 	private float ecoImpactDisadvantage;
 	private float timeAdvantage;
 	private float timeDisadvantage;
+	private float effectiveTime;
 	private float effectiveTimeAdvantage;
 	private float effectiveTimeDisadvantage;
 	private float costAdvantage;
 	private float costDisadvantage;
+	private float comfortRatingAdvantage;
+	private float comfortRatingDisadvantage;
 	private float comfortRating;
 	private ArrayList<SubrouteModel> subroutes;
 	
@@ -158,6 +161,12 @@ public class RouteModel {
 	public void setTimeDisadvantage(float timeDisadvantage) {
 		this.timeDisadvantage = timeDisadvantage;
 	}
+	public float getEffectiveTime() {
+		return effectiveTime;
+	}
+	public void setEffectiveTime(float effectiveTime) {
+		this.effectiveTime = effectiveTime;
+	}
 	public float getEffectiveTimeAdvantage() {
 		return effectiveTimeAdvantage;
 	}
@@ -182,6 +191,18 @@ public class RouteModel {
 	public void setCostDisadvantage(float costDisadvantage) {
 		this.costDisadvantage = costDisadvantage;
 	}
+	public float getComfortRatingAdvantage() {
+		return comfortRatingAdvantage;
+	}
+	public void setComfortRatingAdvantage(float comfortRatingAdvantage) {
+		this.comfortRatingAdvantage = comfortRatingAdvantage;
+	}
+	public float getComfortRatingDisadvantage() {
+		return comfortRatingDisadvantage;
+	}
+	public void setComfortRatingDisadvantage(float comfortRatingDisadvantage) {
+		this.comfortRatingDisadvantage = comfortRatingDisadvantage;
+	}
 	public float getComfortRating() {
 		return comfortRating;
 	}
@@ -194,6 +215,6 @@ public class RouteModel {
 	public void setSubroutes(ArrayList<SubrouteModel> subroutes) {
 		this.subroutes = subroutes;
 	}
-
+	
 }
 

@@ -102,29 +102,31 @@ public class RouteDAO {
           
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
 	    int periodInMinutes = new Period(routeModel.getDepartureTime(), routeModel.getDestinationTime()).toStandardMinutes().getMinutes();
+	    int luggage = routeModel.isLuggage() ? 1 : 0;
 	    
         String sql = "INSERT INTO " + this.tableRoute + " VALUES ("
             		+ routeModel.getID() + ", "
             		+ routeModel.getUserID() + ", "
-            		+ "'" + routeModel.getDepartureAddress() + "'" + ", "
-            		+ "'" + routeModel.getDestinationAddress() + "'"  + ", "
-            		+ "'" + routeModel.getDepartureTime().toString(fmt) + "'" + ", "
-            		+ "'" + routeModel.getDestinationTime().toString(fmt) + "'" + ", "
+            		+ "'" + routeModel.getDepartureAddress() + "', "
+            		+ "'" + routeModel.getDestinationAddress() + "', "
+            		+ "'" + routeModel.getDepartureTime().toString(fmt) + "', "
+            		+ "'" + routeModel.getDestinationTime().toString(fmt) + "', "
             		+ routeModel.getTotalDistance() + ", "
             		+ routeModel.getTotalCost() + ", "
             		+ routeModel.getTotalEmission() + ", "
-            		+ 0 + ", "
-            		+ 0 + ", "
-            		+ 0 + ", "
-            		+ 0 + ", "
-            		+ 0 + ", "
-            		+ 0 + ", "
-            		+ 0 + ", "
-            		+ 0 + ", "
-            		+ 0 + ", "
-            		+ 0 + ", "
             		+ periodInMinutes + ", "
-            		+ periodInMinutes
+            		+ luggage + ", "
+            		+ routeModel.getPassengers() + ", "
+            		+ routeModel.getEffectiveTimeAdvantage() + ", "
+            		+ routeModel.getEffectiveTimeDisadvantage() + ", "
+            		+ routeModel.getEcoImpactAdvantage() + ", "
+            		+ routeModel.getEcoImpactDisadvantage() + ", "
+            		+ routeModel.getTimeAdvantage() + ", "
+            		+ routeModel.getTimeDisadvantage() + ", "
+            		+ routeModel.getCostAdvantage() + ", "
+            		+ routeModel.getCostDisadvantage() + ", "
+            		+ routeModel.getComfortRatingAdvantage() + ", "
+            		+ routeModel.getComfortRatingDisadvantage() 
             		+ ");";
        
         query.executeUpdate(sql);

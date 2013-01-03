@@ -1,6 +1,7 @@
 package com.jinengo.routengenerator.infrastructure;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.w3c.dom.Element;
 
 import com.jinengo.routengenerator.model.SubrouteModel;
@@ -48,12 +49,14 @@ public class SubRouteMapper {
 		subrouteModel.setCosts(Float.parseFloat(getNodeValue("costs", subRouteElem)));
 		subrouteModel.setDistance(Float.parseFloat(getNodeValue("distance", subRouteElem)));
 		subrouteModel.setEcoImpact(Float.parseFloat(getNodeValue("emissions", subRouteElem)));
-		subrouteModel.setTime((int)Float.parseFloat(getNodeValue("traveltime", subRouteElem)));
 		subrouteModel.setTrasportationRaw(getNodeValue("transportation", subRouteElem));
 		subrouteModel.setDepartureAddress(getNodeValue("name", subRouteElem, 0));
 		subrouteModel.setDepartureTime(new DateTime((long)Float.parseFloat(getNodeValue("starttime", subRouteElem))));
 		subrouteModel.setDestinationAddress(getNodeValue("name", subRouteElem, 1));
 		subrouteModel.setDestinationTime(new DateTime((long)Float.parseFloat(getNodeValue("duetime", subRouteElem))));
+		
+		int periodInMinutes = new Period(subrouteModel.getDepartureTime(), subrouteModel.getDestinationTime()).toStandardMinutes().getMinutes();
+		subrouteModel.setTime(periodInMinutes);
 		
 		return subrouteModel;
 	}
