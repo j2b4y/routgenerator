@@ -41,10 +41,10 @@ public class RouteExpander {
 		// every 4th person travel in group
 		boolean isGroup = rnd.nextInt(4) == 0;
 		
-		// group and married person are 1 to 5 person
+		// group and married person are 1 to 6 person
     	if(userModel.getFamilyStatus() == 2 || isGroup){
-    		// 1 to 5 persons
-    		cnt = rnd.nextInt(5) + 1;
+    		// 1 to 6 persons
+    		cnt = rnd.nextInt(6) + 1;
     	}
     	
 		return cnt;

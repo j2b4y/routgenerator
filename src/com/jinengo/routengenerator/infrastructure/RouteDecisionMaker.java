@@ -6,6 +6,7 @@ import java.util.Random;
 import com.jinengo.routengenerator.model.RouteModel;
 import com.jinengo.routengenerator.model.SubrouteModel;
 import com.jinengo.routengenerator.model.UserModel;
+import com.jinengo.routengenerator.service.helper.ApiErrorException;
 
 /**
  * Get the most fitting route depending on user preferences
@@ -137,8 +138,9 @@ public class RouteDecisionMaker {
 	 * 
 	 * @param routeList
 	 * @return RouteModel - route fitting most to user
+	 * @throws ApiErrorException 
 	 */
-	public RouteModel getMostFittingRoute(ArrayList<RouteModel> routeList) {
+	public RouteModel getMostFittingRoute(ArrayList<RouteModel> routeList) throws ApiErrorException {
 		Random rnd = new Random();
 		if (routeList.size() > 0) {		
 			int prblty = rnd.nextInt(4);
@@ -150,7 +152,8 @@ public class RouteDecisionMaker {
 				int rndPos = rnd.nextInt(routeList.size());
 				return routeList.get(rndPos);
 			}
+		} else {
+			throw new ApiErrorException("Route leer. Api liefert kein korrektes Ergebnis. Programm wird beendet!");
 		}
-		return null;
 	}
 }

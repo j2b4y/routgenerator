@@ -28,11 +28,9 @@ public class UserHandler {
 	 * 
 	 * @return list with user details
 	 */
-	public ArrayList<UserModel> generateUserList() {
+	public ArrayList<UserModel> generateUserList(int activeUser, int maxUser) {
 		ArrayList<UserModel> userList = new ArrayList<UserModel>();
 		boolean isActive = false;
-		int activeUser = 30;
-		int maxUser = 100;
 		
 		try {
 			// generate list of user id's for calculating route

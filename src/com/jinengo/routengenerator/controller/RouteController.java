@@ -11,6 +11,7 @@ import com.jinengo.routengenerator.infrastructure.RouteMapper;
 import com.jinengo.routengenerator.model.RouteModel;
 import com.jinengo.routengenerator.model.UserModel;
 import com.jinengo.routengenerator.service.RouteHandler;
+import com.jinengo.routengenerator.service.helper.ApiErrorException;
 import com.jinengo.routengenerator.service.helper.DestinationGenerator;
 
 /**
@@ -25,8 +26,9 @@ public class RouteController {
 	 * generate route depending on UserModel
 	 * 
 	 * @param userModel
+	 * @throws ApiErrorException 
 	 */
-	public void generateSpecificRoute(UserModel userModel) {
+	public void generateSpecificRoute(UserModel userModel) throws ApiErrorException {
 		// generate random destinations
 		DestinationGenerator dg = new DestinationGenerator(); 
 		ArrayList<String> destinations = dg.getRandomDestinations();

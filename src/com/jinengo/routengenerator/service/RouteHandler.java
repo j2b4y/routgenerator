@@ -6,6 +6,7 @@ import java.util.Random;
 import com.jinengo.routengenerator.model.RouteModel;
 import com.jinengo.routengenerator.model.SubrouteModel;
 import com.jinengo.routengenerator.model.UserModel;
+import com.jinengo.routengenerator.service.helper.ApiErrorException;
 import com.jinengo.routengenerator.service.helper.QueryHandler;
 
 /**
@@ -31,15 +32,21 @@ private RouteDAO routeDAO;
 		this.routeDAO = new RouteDAO(new QueryHandler(), daysInThePast);
 	}
 	
+	/**
+	 * Generate random day in past
+	 * 
+	 * @return int - random day count
+	 */
 	private int generateRandomDayInPast() {
 		Random rnd = new Random();
-		// two generate two data somewhere in between the last years
+		// too generate data somewhere in between the last two years
 		int daysInThePast = 2 * 365;
 		return rnd.nextInt(daysInThePast + 1);
 	}
 	
 	/**
 	 * Generate new route id
+	 * 
 	 * @return id - new route id
 	 */
 	private int getNewRouteId() {
@@ -54,6 +61,7 @@ private RouteDAO routeDAO;
 	
 	/**
 	 * Generate new sub route id
+	 * 
 	 * @return id - new sub route id
 	 */
 	private int getNewSubRouteId() {
@@ -68,6 +76,7 @@ private RouteDAO routeDAO;
 	
 	/**
 	 * Get comfort rating
+	 * 
 	 * @param id
 	 * @return comfRating
 	 */
@@ -83,10 +92,12 @@ private RouteDAO routeDAO;
 	
 	/**
 	 * Save route to Database
+	 * 
 	 * @param routeModel
 	 * @param userModel
+	 * @throws ApiErrorException 
 	 */
-	public void saveRoute(RouteModel routeModel, UserModel userModel) {
+	public void saveRoute(RouteModel routeModel, UserModel userModel) throws ApiErrorException {
 		int routeId = getNewRouteId();
 		if(routeModel != null) {
 			routeModel.setID(routeId);
@@ -101,7 +112,7 @@ private RouteDAO routeDAO;
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("Route leer");
+			throw new ApiErrorException("Route leer. Api liefert kein korrektes Ergebnis. Programm wird beendet!");
 		}
 		
 	}

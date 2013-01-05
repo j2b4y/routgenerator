@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.jinengo.routengenerator.model.UserModel;
 import com.jinengo.routengenerator.service.UserHandler;
+import com.jinengo.routengenerator.service.helper.ApiErrorException;
 import com.jinengo.routengenerator.service.helper.MSSQLConnectionHandler;
 
 /**
@@ -27,9 +28,9 @@ public class MainController {
 	 * main function to generate Routes query user ids and user details select
 	 * routes depending on user preferences and save to db
 	 */
-	public void generateData() {
+	public void generateData(int activeUser, int maxUser) {
 		// get a list of detailed users
-		ArrayList<UserModel> userList = generateUserList();
+		ArrayList<UserModel> userList = generateUserList(activeUser, maxUser);
 
 		// generate routes for a given userList
 		generateRoutes(userList);
@@ -43,8 +44,8 @@ public class MainController {
 	 * 
 	 * @return list of user
 	 */
-	private ArrayList<UserModel> generateUserList() {
-		return this.userHandler.generateUserList();
+	private ArrayList<UserModel> generateUserList(int activeUser, int maxUser) {
+		return this.userHandler.generateUserList(activeUser, maxUser);
 	}
 
 	/**
@@ -55,19 +56,24 @@ public class MainController {
 		Random rnd = new Random();
 
 		for (UserModel userModel : userList) {
-
-			if (userModel.isActiveUser()) {
-				// Drive max 3 times a day if active
-				int routesPerDay = rnd.nextInt(3) + 1;
-				for (int i = 0; i < routesPerDay; i++) {
-					routeController.generateSpecificRoute(userModel);
+			try {
+				if (userModel.isActiveUser()) {
+					// Drive max 3 times a day if active
+					int routesPerDay = rnd.nextInt(3) + 1;
+					for (int i = 0; i < routesPerDay; i++) {
+						routeController.generateSpecificRoute(userModel);
+					}
+				} else {
+					// Drive only every third day if not active
+					int prblty = rnd.nextInt(3) + 1;
+					if (prblty == 3) {
+						routeController.generateSpecificRoute(userModel);
+					}
 				}
-			} else {
-				// Drive only every third day if not active
-				int prblty = rnd.nextInt(3) + 1;
-				if (prblty == 3) {
-					routeController.generateSpecificRoute(userModel);
-				}
+			} catch (ApiErrorException e) {
+				// Error at Jinengo API - no result
+				e.printStackTrace();
+				return;
 			}
 		}
 	}
