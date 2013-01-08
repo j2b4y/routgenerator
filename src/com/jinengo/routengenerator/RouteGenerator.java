@@ -16,8 +16,8 @@ public class RouteGenerator {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int activeUser = 10; 
-		int maxUser = 10;
+		int activeUser = 30; 
+		int maxUser = 1000;
 		
 		// initialize main controller an generate data
 		MainController mc = new MainController();

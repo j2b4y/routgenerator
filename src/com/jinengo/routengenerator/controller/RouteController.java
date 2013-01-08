@@ -41,9 +41,18 @@ public class RouteController {
 		RouteMapper routeProcessor = new RouteMapper();
 		ArrayList<RouteModel> routeList = routeProcessor.processXmlDocument(doc);
 		
+		if(routeList.size() <= 1) {
+			throw new ApiErrorException("Route leer. Api liefert kein korrektes Ergebnis. Programm wird beendet!");
+		}
+		
 		// expand properties of each route with properties specific to the user
 		RouteExpander routeExpander = new RouteExpander(userModel);
 		routeList = routeExpander.expandProperties(routeList);
+		
+		if(routeList.size() == 0) {
+			System.out.println("Es konnte keine passende Route für den Nutzer ermittelt werden. User besitzt Auto: " + userModel.isOwnsGasCar());
+			return;
+		}
 		
 		// decide wich route is fitting most to user model
 		RouteDecisionMaker routeDecisionMaker = new RouteDecisionMaker(userModel);

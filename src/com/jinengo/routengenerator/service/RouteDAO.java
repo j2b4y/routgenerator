@@ -128,7 +128,8 @@ public class RouteDAO {
             		+ routeModel.getCostAdvantage() + ", "
             		+ routeModel.getCostDisadvantage() + ", "
             		+ routeModel.getComfortRatingAdvantage() + ", "
-            		+ routeModel.getComfortRatingDisadvantage() 
+            		+ routeModel.getComfortRatingDisadvantage() + ", "
+            		+ 0
             		+ ");";
        
         query.executeUpdate(sql);

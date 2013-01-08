@@ -54,6 +54,10 @@ public class RouteValidator {
 		if (routeModel.getSubroutes().get(0).getTransportationID() == 7) {
 			return this.userModel.isOwnsPEV();
 		} 
+		// TODO: TESTs
+		if (routeModel.getSubroutes().get(0).getTransportationID() >= 4 && routeModel.getSubroutes().get(0).getTransportationID() <= 6) {
+			return this.userModel.isOwnsGasCar();
+		}
 		return true;
 	}
 	

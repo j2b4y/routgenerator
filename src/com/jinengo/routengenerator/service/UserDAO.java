@@ -37,7 +37,7 @@ public class UserDAO {
 		
 		ArrayList<String> userIds = new ArrayList<String>();
 		
-		String sqlQuery = 	"SELECT TOP " + maxCnt + " ID, (SELECT COUNT(1) FROM Route WHERE userID = u.ID ) RouteCount "
+		String sqlQuery = 	"SELECT TOP " + maxCnt + " ID, (SELECT COUNT(1) FROM A_SOURCE_Route WHERE Jinengo_ID = u.ID ) RouteCount "
 						 	+ "FROM " + this.tableUserName + " u "
 						 	+ "ORDER BY RouteCount DESC";
 		

@@ -54,16 +54,30 @@ public class SubRouteExpander {
 			boolean incRange = rnd.nextInt(2) == 0;
 			
 			// generate random int between 0 and 1 to variant train kind
-			int rndSubTrain = rnd.nextInt(1);
+			
 			
 			if(incRange) {
-				if(userModel.getIncomeRange() < 3) {
-					subrouteModel.setTransportationID(17 + rndSubTrain); // ME or MEr			
-				}
-				if(userModel.getIncomeRange() == 3) {
-					subrouteModel.setTransportationID(15 + rndSubTrain); // RE or REx
+				if(userModel.getIncomeRange() <= 3) {
+					float prblty = rnd.nextFloat();
+					if(prblty < 0.3){
+						// ME
+						subrouteModel.setTransportationID(17);
+					} else if (prblty < 0.6) {
+						// MEr
+						subrouteModel.setTransportationID(18);
+					} else if (prblty < 0.8) {
+						// RE
+						subrouteModel.setTransportationID(15);
+					} else if (prblty < 0.9) {
+						// REx
+						subrouteModel.setTransportationID(16);
+					} else {
+						// NWB
+						subrouteModel.setTransportationID(19);
+					}
 				}
 				if(userModel.getIncomeRange() > 3) {
+					int rndSubTrain = rnd.nextInt(2);
 					subrouteModel.setTransportationID(20 + rndSubTrain); // IC or ICE
 				}
 			} else {

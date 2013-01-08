@@ -39,8 +39,8 @@ private RouteDAO routeDAO;
 	 */
 	private int generateRandomDayInPast() {
 		Random rnd = new Random();
-		// too generate data somewhere in between the last two years
-		int daysInThePast = 2 * 365;
+		// too generate data somewhere in between the last years
+		int daysInThePast = 365 + 30;
 		return rnd.nextInt(daysInThePast + 1);
 	}
 	
