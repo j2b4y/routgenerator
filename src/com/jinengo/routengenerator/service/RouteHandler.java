@@ -100,16 +100,20 @@ private RouteDAO routeDAO;
 	public void saveRoute(RouteModel routeModel, UserModel userModel) throws ApiErrorException {
 		int routeId = getNewRouteId();
 		if(routeModel != null) {
-			routeModel.setID(routeId);
-			try {
-				this.routeDAO.insertRoute(routeModel);
-				for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
-					subrouteModel.setRouteID(routeId);
-					subrouteModel.setID(getNewSubRouteId());
-					this.routeDAO.insertSubRoute(subrouteModel);
+			if(routeModel.getTotalDistance() > 0) {
+				routeModel.setID(routeId);
+				try {
+					this.routeDAO.insertRoute(routeModel);
+					for (SubrouteModel subrouteModel : routeModel.getSubroutes()) {
+						subrouteModel.setRouteID(routeId);
+						subrouteModel.setID(getNewSubRouteId());
+						this.routeDAO.insertSubRoute(subrouteModel);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} else {
+				throw new ApiErrorException("Route enthält negative Werte. Distanz ist: " + routeModel.getTotalDistance() + ". Jinengo Api lieferte kein korrektes Ergebnis. Programm wird beendet!");
 			}
 		} else {
 			throw new ApiErrorException("Route leer. Api liefert kein korrektes Ergebnis. Programm wird beendet!");

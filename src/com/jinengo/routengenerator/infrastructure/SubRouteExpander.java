@@ -68,7 +68,7 @@ public class SubRouteExpander {
 					} else if (prblty < 0.8) {
 						// RE
 						subrouteModel.setTransportationID(15);
-					} else if (prblty < 0.9) {
+					} else if (prblty <= 0.9) {
 						// REx
 						subrouteModel.setTransportationID(16);
 					} else {

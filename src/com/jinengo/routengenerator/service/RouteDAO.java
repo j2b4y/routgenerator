@@ -103,12 +103,15 @@ public class RouteDAO {
 		query = conn.createStatement();
           
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
-	    int periodInMinutes = new Period(routeModel.getDepartureTime(), routeModel.getDestinationTime()).toStandardMinutes().getMinutes();
+	    int need = 1;
+	    int isProcessed = 0;
+		int periodInMinutes = new Period(routeModel.getDepartureTime(), routeModel.getDestinationTime()).toStandardMinutes().getMinutes();
 	    int luggage = routeModel.isLuggage() ? 1 : 0;
 	    
-        String sql = "INSERT INTO " + this.tableRoute + " VALUES ("
+        String sql = "INSERT INTO " + this.tableRoute + " (Route_ID, Jinengo_ID, Route_ZeitAuswahl, Route_Abfahrt, Route_Ankunft, Route_Startzeit, Route_Endzeit, Route_Distanz, Route_Kosten, Route_CO2Emission, Route_Reisezeit, Route_Beduerfnis, Route_Gepaeck, Route_Passagiere, effectiveTimeAdvantage, effectiveTimeDisadvantage, ecoImpactAdvantage, ecoImpactDisadvantage, timeAdvantage, timeDisadvantage, costsAdvantage, costsDisadvantage, comfortAdvantage, comfortDisadvantage, isProcessed) VALUES ("
             		+ routeModel.getID() + ", "
             		+ routeModel.getUserID() + ", "
+            		+ "'" + routeModel.getDepartureTime().toString(fmt) + "', "
             		+ "'" + routeModel.getDepartureAddress() + "', "
             		+ "'" + routeModel.getDestinationAddress() + "', "
             		+ "'" + routeModel.getDepartureTime().minusDays(this.daysInPast).toString(fmt) + "', "
@@ -117,6 +120,7 @@ public class RouteDAO {
             		+ routeModel.getTotalCost() + ", "
             		+ routeModel.getTotalEmission() + ", "
             		+ periodInMinutes + ", "
+            		+ need + ", "
             		+ luggage + ", "
             		+ routeModel.getPassengers() + ", "
             		+ routeModel.getEffectiveTimeAdvantage() + ", "
@@ -129,7 +133,7 @@ public class RouteDAO {
             		+ routeModel.getCostDisadvantage() + ", "
             		+ routeModel.getComfortRatingAdvantage() + ", "
             		+ routeModel.getComfortRatingDisadvantage() + ", "
-            		+ 0
+            		+ isProcessed
             		+ ");";
        
         query.executeUpdate(sql);
@@ -150,17 +154,18 @@ public class RouteDAO {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
 	    int periodInMinutes = new Period(subrouteModel.getDepartureTime(), subrouteModel.getDestinationTime()).toStandardMinutes().getMinutes();
 	    
-        String sql = "INSERT INTO " + this.tableSubRoute + "(Subroute_ID, Route_ID, Verkehrsmitteltyp_ID, Subroute_Start, Subroute_End, Subroute_Startzeit, Subroute_Endzeit, Subroute_Distanz, Subroute_Kosten, Subroute_CO2Emission, Subroute_Reisezeit, Subroute_Verkehrsmittel) VALUES ("
+        String sql = "INSERT INTO " + this.tableSubRoute + "(Subroute_ID, Route_ID, Verkehrsmitteltyp_ID, Subroute_Start, Subroute_End, Subroute_Startzeit, Subroute_Endzeit, Subroute_Distanz, Subroute_Kosten, Subroute_CO2Emission, Subroute_ReisezeitNutzbar, Subroute_Reisezeit, Subroute_Verkehrsmittel) VALUES ("
             		+ subrouteModel.getID() + ", "
             		+ subrouteModel.getRouteID() + ", "
             		+ subrouteModel.getTransportationID() + ", "
-            		+ "'" + subrouteModel.getDepartureAddress() + "'" + ", "
-            		+ "'" + subrouteModel.getDestinationAddress() + "'"  + ", "
-            		+ "'" + subrouteModel.getDepartureTime().minusDays(this.daysInPast).toString(fmt) + "'" + ", "
-            		+ "'" + subrouteModel.getDestinationTime().minusDays(this.daysInPast).toString(fmt) + "'" + ", "
+            		+ "'" + subrouteModel.getDepartureAddress() + "', "
+            		+ "'" + subrouteModel.getDestinationAddress() + "', "
+            		+ "'" + subrouteModel.getDepartureTime().minusDays(this.daysInPast).toString(fmt) + "', "
+            		+ "'" + subrouteModel.getDestinationTime().minusDays(this.daysInPast).toString(fmt) + "', "
             		+ subrouteModel.getDistance() + ", "
             		+ subrouteModel.getCosts() + ", "
             		+ subrouteModel.getEcoImpact() + ", "
+            		+ subrouteModel.getTimeUsable() + ", "
             		+ periodInMinutes + ", "
             		+ "'" + subrouteModel.getTrasportationRaw() + "'"
             		+ ");";
