@@ -11,7 +11,7 @@ import com.jinengo.routengenerator.service.helper.QueryHandler;
 
 /**
  * 
- * Handles all route requests to database
+ * Handles all route requests
  * Save the selected route to database and get max ids from database
  * 
  * @author lars & christopher

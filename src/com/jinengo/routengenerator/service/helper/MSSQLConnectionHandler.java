@@ -60,7 +60,6 @@ public class MSSQLConnectionHandler {
 				conn.close();
 				System.out.println("Connection closed");
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.out.println("Connection close Error");
 			}

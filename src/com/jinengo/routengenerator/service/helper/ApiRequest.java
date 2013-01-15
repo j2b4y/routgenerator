@@ -1,4 +1,4 @@
-package com.jinengo.routengenerator.api;
+package com.jinengo.routengenerator.service.helper;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -11,10 +11,18 @@ public class ApiErrorException extends Exception {
 	
 	private String msg = "";
 	
+	/**
+	 * Exception for Jinengo API Error
+	 * 
+	 * @param msg - exception message
+	 */
 	public ApiErrorException(String msg) {
 		this.msg = msg;
 	}
 	
+	/**
+	 * Default toString Function
+	 */
 	public String toString(){
         return this.msg;
     }

@@ -15,6 +15,7 @@ import com.jinengo.routengenerator.service.helper.MSSQLConnectionHandler;
 import com.jinengo.routengenerator.service.helper.QueryHandler;
 
 /**
+ * Data Access Object for (Sub)Routes
  * Perform Database request to save route and get route data
  * 
  * @author lars & christopher
