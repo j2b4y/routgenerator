@@ -14,10 +14,8 @@ public class RouteModel {
 	private int userID;
 	private int ID;
 	private DateTime timeSelected;
-	private String departureGeography = "";
 	private String departureAddress;
 	private DateTime departureTime;
-	private String destinationGeography;
 	private String destinationAddress;
 	private DateTime destinationTime;
 	private float totalTime;
@@ -59,12 +57,6 @@ public class RouteModel {
 	public void setTimeSelected(DateTime timeSelected) {
 		this.timeSelected = timeSelected;
 	}
-	public String getDepartureGeography() {
-		return departureGeography;
-	}
-	public void setDepartureGeography(String departureGeography) {
-		this.departureGeography = departureGeography;
-	}
 	public String getDepartureAddress() {
 		return departureAddress;
 	}
@@ -76,12 +68,6 @@ public class RouteModel {
 	}
 	public void setDepartureTime(DateTime departureTime) {
 		this.departureTime = departureTime;
-	}
-	public String getDestinationGeography() {
-		return destinationGeography;
-	}
-	public void setDestinationGeography(String destinationGeography) {
-		this.destinationGeography = destinationGeography;
 	}
 	public String getDestinationAddress() {
 		return destinationAddress;
