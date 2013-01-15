@@ -9,6 +9,7 @@ import org.w3c.dom.NodeList;
 
 import com.jinengo.routengenerator.model.RouteModel;
 import com.jinengo.routengenerator.model.SubrouteModel;
+import com.jinengo.routengenerator.service.helper.ApiErrorException;
 
 /**
  * Process Route Document an map it to RouteModel and SubrouteModel
@@ -26,7 +27,7 @@ public class RouteMapper {
 	 * @param elem - XML Element
 	 * @return String - Node value
 	 */
-	private String getNodeValue(String nodeName, Element elem){
+	private static String getNodeValue(String nodeName, Element elem){
 		return elem.getElementsByTagName(nodeName).item(0).getTextContent();
 	}
 	
@@ -36,7 +37,7 @@ public class RouteMapper {
 	 * @param subRouteElem
 	 * @return subRouteModel
 	 */
-	private SubrouteModel processSubRouteElement(Element subRouteElem) {
+	private static SubrouteModel processSubRouteElement(Element subRouteElem) {
 		SubRouteMapper subRouteMapper = new SubRouteMapper();
 		return subRouteMapper.mapSubRoute(subRouteElem);
 	}
@@ -47,7 +48,7 @@ public class RouteMapper {
 	 * @param subRouteNodes
 	 * @return list of subroute
 	 */
-	private ArrayList<SubrouteModel> getSubroutes(NodeList subRouteNodes) {
+	private static ArrayList<SubrouteModel> getSubroutes(NodeList subRouteNodes) {
 		ArrayList<SubrouteModel> subRoutes = new ArrayList<SubrouteModel>();
 		
     	int subRouteCount = subRouteNodes.getLength();
@@ -69,7 +70,7 @@ public class RouteMapper {
 	 * @param routeElem
 	 * @return routeModel
 	 */
-	private RouteModel processRouteElement(Element routeElem) {
+	private static RouteModel processRouteElement(Element routeElem) {
 		RouteModel routeModel = new RouteModel();
 		
 		// Set all subroute to route model
@@ -89,8 +90,9 @@ public class RouteMapper {
 	 * 
 	 * @param doc - route xml doc
 	 * @return route list
+	 * @throws ApiErrorException 
 	 */
-	public ArrayList<RouteModel> processXmlDocument(Document doc){
+	public static ArrayList<RouteModel> processXmlDocument(Document doc) throws ApiErrorException{
     	ArrayList<RouteModel> routeList = new ArrayList<RouteModel>();
     	
     	// get all route nodes from document
@@ -106,6 +108,13 @@ public class RouteMapper {
                 routeList.add(processRouteElement(routeElement));
     		}
     	}
+    	
+		// after 1000 request in 24h the jinengo api will only return train route, 
+		// car/foot is not returned due to gogle maps api restriction, so stop program
+		if(routeList.size() <= 1) {
+			throw new ApiErrorException("Route leer. Api liefert kein korrektes Ergebnis. Programm wird beendet!");
+		}
+		
     	return routeList;
 	}
 }

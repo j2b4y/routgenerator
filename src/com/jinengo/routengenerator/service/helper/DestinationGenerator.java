@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class DestinationGenerator {
 	
-	public ArrayList<String> getRandomDestinations() {
+	public static ArrayList<String> getRandomDestinations() {
 		ArrayList<String> res = new ArrayList<String>();
     	java.util.Random random = new java.util.Random();
     	

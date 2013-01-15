@@ -25,42 +25,45 @@ public class RouteController {
 	/**
 	 * generate route depending on UserModel
 	 * 
-	 * @param userModel
-	 * @throws ApiErrorException 
+	 * @param userModel - user model
+	 * @throws ApiErrorException - exception if jinengo api doesn't work correctly
 	 */
 	public void generateSpecificRoute(UserModel userModel) throws ApiErrorException {
-		// generate random destinations
-		DestinationGenerator dg = new DestinationGenerator(); 
-		ArrayList<String> destinations = dg.getRandomDestinations();
+		// init objects with user details
+		RouteExpander routeExpander = new RouteExpander(userModel);
+		RouteDecisionMaker routeDecisionMaker = new RouteDecisionMaker(userModel);
 		
-		// generate route depending on destinations
-		ApiRequest apiRequest = new ApiRequest();
-		Document doc = apiRequest.getXmlRouteDocument(destinations.get(0), destinations.get(1), "0");
+		// init route handler, true to generate routes in past, false to generate current day
+		RouteHandler routeHandler = new RouteHandler(true);
 		
-		// process xml result and save it in route object
-		RouteMapper routeProcessor = new RouteMapper();
-		ArrayList<RouteModel> routeList = routeProcessor.processXmlDocument(doc);
+		/**
+		 *  start route generation process
+		 */
+		// generate random destinations	 
+		ArrayList<String> destinations = DestinationGenerator.getRandomDestinations();
 		
-		if(routeList.size() <= 1) {
-			throw new ApiErrorException("Route leer. Api liefert kein korrektes Ergebnis. Programm wird beendet!");
-		}
+		// generate route with jinengo api depending on destinations
+		Document doc = ApiRequest.getXmlRouteDocument(destinations.get(0), destinations.get(1), "0");
+		
+		// process xml api result and save it in route object
+		ArrayList<RouteModel> routeList = RouteMapper.processXmlDocument(doc);
 		
 		// expand properties of each route with properties specific to the user
-		RouteExpander routeExpander = new RouteExpander(userModel);
 		routeList = routeExpander.expandProperties(routeList);
 		
-		if(routeList.size() == 0) {
+		if(routeList.size() > 0) {
+			// decide wich route is fitting most to user model
+			RouteModel routeModel = routeDecisionMaker.getMostFittingRoute(routeList);
+			
+			// write route to database
+			routeHandler.saveRoute(routeModel, userModel);
+			
+		} else {
+			// if no route fits to user properties, stop generating route
 			System.out.println("Es konnte keine passende Route für den Nutzer ermittelt werden. User besitzt Auto: " + userModel.isOwnsGasCar());
 			return;
 		}
-		
-		// decide wich route is fitting most to user model
-		RouteDecisionMaker routeDecisionMaker = new RouteDecisionMaker(userModel);
-		RouteModel routeModel = routeDecisionMaker.getMostFittingRoute(routeList);
-		
-		// write route to database
-		RouteHandler routeHandler = new RouteHandler();
-		routeHandler.saveRoute(routeModel, userModel);
+
 	}
 	
 }

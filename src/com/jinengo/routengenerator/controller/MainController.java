@@ -25,8 +25,11 @@ public class MainController {
 	}
 
 	/**
-	 * main function to generate Routes query user ids and user details select
-	 * routes depending on user preferences and save to db
+	 * Main function to generate Routes query user ids and user details select
+	 * Generate routes depending on user preferences and save to db
+	 * 
+	 * @param activeUser
+	 * @param maxUser
 	 */
 	public void generateData(int activeUser, int maxUser) {
 		// get a list of detailed users
@@ -49,14 +52,17 @@ public class MainController {
 	}
 
 	/**
-	 * generate specific routes for a given user list
+	 * Generate specific routes for a given user list
+	 * 
+	 * @param userList
 	 */
 	private void generateRoutes(ArrayList<UserModel> userList) {
 		RouteController routeController = new RouteController();
 		Random rnd = new Random();
 
-		for (UserModel userModel : userList) {
-			try {
+		// generate userspecific routes
+		try {
+			for (UserModel userModel : userList) {
 				if (userModel.isActiveUser()) {
 					// Drive max 3 times a day if active
 					int routesPerDay = rnd.nextInt(3) + 1;
@@ -70,11 +76,10 @@ public class MainController {
 						routeController.generateSpecificRoute(userModel);
 					}
 				}
-			} catch (ApiErrorException e) {
-				// Error at Jinengo API - no result
-				e.printStackTrace();
-				return;
 			}
+		} catch (ApiErrorException e) {
+			// Error at Jinengo API
+			e.printStackTrace();
 		}
 	}
 }

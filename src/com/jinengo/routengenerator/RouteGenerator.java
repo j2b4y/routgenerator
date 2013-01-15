@@ -18,12 +18,10 @@ public class RouteGenerator {
 	public static void main(String[] args) {
 		int activeUser = 30; 
 		int maxUser = 1000;
-		
-		// initialize main controller an generate data
-		MainController mc = new MainController();
+		MainController mainController = new MainController();
 		
 		// generate Data for maxUser count, active user drive more often
-		mc.generateData(activeUser, maxUser);
+		mainController.generateData(activeUser, maxUser);
 
 	}
 }

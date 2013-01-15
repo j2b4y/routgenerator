@@ -22,12 +22,14 @@ public class RouteHandler {
 private RouteDAO routeDAO;
 	
 	/**
+	 * 
 	 * Default constructor
 	 * Init user data access object and query handler
+	 * 
+	 * @param generatePastData - true to generate routes in past, false to generate current day
+	 * 
 	 */
-	public RouteHandler() {
-		// true to generate routes in the past, false to generate routes for the current day
-		boolean generatePastData = true;
+	public RouteHandler(boolean generatePastData) {
 		int daysInThePast = generatePastData ? generateRandomDayInPast() : 0;
 		this.routeDAO = new RouteDAO(new QueryHandler(), daysInThePast);
 	}

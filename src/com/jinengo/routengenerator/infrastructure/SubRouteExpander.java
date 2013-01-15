@@ -19,7 +19,7 @@ public class SubRouteExpander {
 	
 	public SubRouteExpander(UserModel userModel) {
 		this.userModel = userModel;
-		this.routeHandler = new RouteHandler();
+		this.routeHandler = new RouteHandler(true);
 	}
 	
 	/**

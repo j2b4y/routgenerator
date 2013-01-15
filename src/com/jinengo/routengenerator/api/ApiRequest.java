@@ -29,7 +29,7 @@ public class ApiRequest {
 	 * @param starttime - time to start
 	 * @return Document with route information
 	 */
-	public Document getXmlRouteDocument(String startString, String destinationString, String starttime){
+	public static Document getXmlRouteDocument(String startString, String destinationString, String starttime){
     	// token for jinengo api access
     	String token = "7a2ba89a-787f-4b42-83cf-f990497e82c8";
     	
