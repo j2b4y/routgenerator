@@ -25,7 +25,7 @@ public class DestinationGenerator {
 		int end = random.nextInt(entrys);
 		
 		// verify that start and end position are not equal
-		while(start==end){
+		while(start == end){
 			end = random.nextInt(entrys);
     	}
 		
