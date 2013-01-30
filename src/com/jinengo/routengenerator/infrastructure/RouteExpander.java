@@ -3,6 +3,8 @@ package com.jinengo.routengenerator.infrastructure;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.joda.time.Period;
+
 import com.jinengo.routengenerator.model.MinMaxModel;
 import com.jinengo.routengenerator.model.RouteModel;
 import com.jinengo.routengenerator.model.SubrouteModel;
@@ -159,6 +161,9 @@ public class RouteExpander {
 		routeModel.setDestinationAddress(routeModel.getSubroutes().get(lastSub).getDestinationAddress());
 		routeModel.setDestinationTime(routeModel.getSubroutes().get(lastSub).getDestinationTime());
 		
+		// calc total time
+		int totalTimeInMinutes = new Period(routeModel.getDepartureTime(), routeModel.getDestinationTime()).toStandardMinutes().getMinutes();
+		routeModel.setTotalTime(totalTimeInMinutes);
 		
 		// expand subroute properties of current route
 		routeModel.setSubroutes(expandSubRoute(routeModel.getSubroutes(), this.userModel));

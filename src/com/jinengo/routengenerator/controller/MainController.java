@@ -71,8 +71,8 @@ public class MainController {
 					}
 				} else {
 					// Drive only every third day if not active
-					int prblty = rnd.nextInt(3) + 1;
-					if (prblty == 3) {
+					int prblty = rnd.nextInt(2) + 1;
+					if (prblty == 2) {
 						routeController.generateSpecificRoute(userModel);
 					}
 				}

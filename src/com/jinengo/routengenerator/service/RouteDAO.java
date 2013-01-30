@@ -106,7 +106,6 @@ public class RouteDAO {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
 	    int need = 1;
 	    int isProcessed = 0;
-		int periodInMinutes = new Period(routeModel.getDepartureTime(), routeModel.getDestinationTime()).toStandardMinutes().getMinutes();
 	    int luggage = routeModel.isLuggage() ? 1 : 0;
 	    
         String sql = "INSERT INTO " + this.tableRoute + " (Route_ID, Jinengo_ID, Route_ZeitAuswahl, Route_Abfahrt, Route_Ankunft, Route_Startzeit, Route_Endzeit, Route_Distanz, Route_Kosten, Route_CO2Emission, Route_Reisezeit, Route_Beduerfnis, Route_Gepaeck, Route_Passagiere, effectiveTimeAdvantage, effectiveTimeDisadvantage, ecoImpactAdvantage, ecoImpactDisadvantage, timeAdvantage, timeDisadvantage, costsAdvantage, costsDisadvantage, comfortAdvantage, comfortDisadvantage, isProcessed) VALUES ("
@@ -120,7 +119,7 @@ public class RouteDAO {
             		+ routeModel.getTotalDistance() + ", "
             		+ routeModel.getTotalCost() + ", "
             		+ routeModel.getTotalEmission() + ", "
-            		+ periodInMinutes + ", "
+            		+ routeModel.getTotalTime() + ", "
             		+ need + ", "
             		+ luggage + ", "
             		+ routeModel.getPassengers() + ", "

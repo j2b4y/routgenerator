@@ -80,7 +80,6 @@ public class RouteMapper {
     	routeModel.setTotalCost(Float.parseFloat(getNodeValue("totalcosts", routeElem)));
     	routeModel.setTotalDistance(Float.parseFloat(getNodeValue("totaldistance", routeElem)));
     	routeModel.setTotalEmission(Float.parseFloat(getNodeValue("totalemission", routeElem)));
-    	routeModel.setTotalTime(Float.parseFloat(getNodeValue("totaltraveltime", routeElem)));
 		
 		return routeModel;
 	}

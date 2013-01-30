@@ -62,7 +62,7 @@ public class RouteValidator {
 	}
 	
 	/**
-	 * validate route
+	 * validate single route for distance and transportation type
 	 *  
 	 * @param routeModel
 	 * @return boolean - isValid
@@ -73,7 +73,7 @@ public class RouteValidator {
 	
 	/**
 	 * validate a list of routes
-	 * check for each route if its possible alternative depending on user properties
+	 * check for each route if it is a possible route alternative depending on user properties
 	 * 
 	 * @param routeList
 	 * @return routeList - a cleaned and validated routelist
